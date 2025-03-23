@@ -1,26 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+  <RouterView />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import {mapState, mapActions} from 'pinia'
+import { useInvoiceStore } from './components/invoices'
+import './assets/style.css'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  computed: {
+    ...mapState(useInvoiceStore, ["invoices"]),
+  },
+  methods: {
+    ...mapActions(useInvoiceStore, ["loadReceipts"])
+  },
+  async beforeMount () {
+    // TODO why does this fail
+    console.log("This",this);
+    this.loadReceipts();
   }
-}
+  }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

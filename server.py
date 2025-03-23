@@ -13,7 +13,7 @@ app = Bottle()
 def enable_cors(fn):
     def _enable_cors(*args, **kwargs):
         # set CORS headers
-        response.add_header('Access-Control-Allow-Origin', 'http://localhost:8080')
+        response.add_header('Access-Control-Allow-Origin', '*')
         response.add_header('Access-Control-Allow-Headers', 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token')
         response.add_header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, OPTIONS')
 
@@ -140,6 +140,6 @@ def delete_receipt(id):
     return {"message": "Receipt deleted"}
 
 if __name__ == "__main__":
-    app.run(host="localhost", port=8082, debug=True)
+    app.run(host="192.168.1.104", port=8082, debug=True)
     print("\nShutting down... Saving data.")
     save_data()

@@ -1,4 +1,5 @@
 <template>
+  <div class="container">
   <nav style="width: 100%; display: flex; justify-content:space-around">
     <button @click="$router.push('/')">Lista avize</button>
     <button @click="onNewInvoice">Aviz nou</button>
@@ -20,6 +21,7 @@
     </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>

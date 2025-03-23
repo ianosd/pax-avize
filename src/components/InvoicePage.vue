@@ -1,4 +1,5 @@
 <template>
+  <div class="container">
   <nav style="width: 100%; display: flex; justify-content:space-around">
     <button @click="$router.push('/')">Lista avize</button>
     <button @click="onNewInvoice">Aviz nou</button>
@@ -51,6 +52,7 @@
       <button @click="invoice.state = 'submitted'; updateReceipt(invoice);" v-bind:disabled="!isEditableInvoice || !isValidInvoice">Trimite la caserie</button>
     </div>
   </div>
+</div>
 </template>
 
 <script>

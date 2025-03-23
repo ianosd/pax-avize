@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:8082';
+axios.defaults.baseURL = 'http://192.168.1.104:8082';
 
 export const useInvoiceStore = defineStore('invoices', 
     {

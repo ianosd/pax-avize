@@ -63,13 +63,8 @@ export default {
   },
   methods: {
     dragStart(event, invoice) {
-      console.log("DragStart!", invoice);
-      // const fileContent = "hi!";
-      // Set the drag data so OS recognizes it as a file
-      const fileName = "invoice.xml";
-      const fileContent = "<Factura></Factura>"
-      const blob = new Blob([fileContent], { type: "text/xml" });
-      const fileURL = URL.createObjectURL(blob);
+      const fileName = `aviz_${invoice.number}.xml`;
+      const fileURL = `http://192.168.1.104:8082/receipts/${invoice.id}/saga`
 
       event.dataTransfer.setData(
         "DownloadURL",

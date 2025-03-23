@@ -3,6 +3,7 @@ import json
 import os.path
 import datetime
 import dateutil.parser
+import xml.etree.ElementTree as ET
 
 app = Bottle()
 
@@ -108,6 +109,40 @@ def get_receipt(id):
         response.status = 404
         return {"error": "Receipt not found"}
     return receipt
+
+def as_saga_order(receipt):
+    facturi = ET.Element("Facturi")
+    factura = ET.SubElement(facturi, "Factura")
+    antet = ET.SubElement(factura, "Antet")
+    ET.SubElement(antet, "Cod").text = "00378"
+    ET.SubElement(antet, "FurnizorCIF").text = "RO4986511"
+    todaystr = datetime.datetime.today().strftime("%d.%m.%Y")
+    ET.SubElement(antet, "FacturaData").text = todaystr
+    ET.SubElement(antet, "FacturaScadenta").text = todaystr
+
+    detalii = ET.SubElement(factura, "Detalii")
+    continut = ET.SubElement(detalii, "Continut")
+    
+    for idx, product in enumerate(receipt["products"], start=1):
+        linie = ET.SubElement(continut, "Linie")
+        ET.SubElement(linie, "LinieNrCrt").text = str(idx)
+        ET.SubElement(linie, "CodArticolFurnizor").text = product["productCode"]
+        ET.SubElement(linie, "Cantitate").text = f"{product['quantity']}"
+        ET.SubElement(linie, "Pret").text = f"{product['price']}"
+        
+    return ET.tostring(facturi, encoding="utf-8").decode("utf-8")
+    
+@app.get("/receipts/<id:int>/saga", method=["GET"])
+@enable_cors
+def get_saga_xml(id):
+    receipt = find_receipt(id)
+    if not receipt:
+        response.status = 404
+        return {"error": "Receipt not found"}
+    response.headers['Content-Type'] = 'xml/application'
+    fname = f"aviz_{receipt['number']}.xml"
+    response.headers['Content-Disposition'] = f'attachment; filename="{fname}"'
+    return as_saga_order(receipt)
 
 @app.route("/receipts", method=["PUT", "OPTIONS"])
 @enable_cors

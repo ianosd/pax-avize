@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { createPinia } from 'pinia';
 
 import App from './App.vue'
@@ -8,11 +8,11 @@ import HomePage from './components/HomePage.vue';
 import CashierPage from './components/CashierPage.vue';
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: process.env.IS_ELECTRON ? createWebHashHistory() : createWebHistory(),
     routes: [
-        { path: '/', component: HomePage },
+        { path: '/', component: CashierPage },
         { path: '/invoice/:id', component: InvoicePage, name: "invoice", props: true },
-        {path: '/cashier', component: CashierPage}
+        {path: '/operator', component: HomePage}
     ]
 })
 

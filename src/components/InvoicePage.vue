@@ -1,7 +1,7 @@
 <template>
   <div class="container">
   <nav style="width: 100%; display: flex; justify-content:space-around">
-    <button @click="$router.push('/')">Lista avize</button>
+    <button @click="$router.push('/operator')">Lista avize</button>
     <button @click="onNewInvoice">Aviz nou</button>
   </nav>
   <div class="centered" v-if="invoiceLoaded">

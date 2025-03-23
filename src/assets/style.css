@@ -1,0 +1,145 @@
+.container {
+  display: flex;
+  flex-direction:column;
+  justify-content: top;
+  align-items: center;
+  background-color: #f7f7f7;
+  padding: 10px;
+}
+
+.centered {
+  display: flex;
+  flex-direction:column;
+  justify-content: top;
+  align-items: center;
+  width:100%;
+}
+
+.invoice-link {
+    border-radius: 5px;
+}
+/* Styling for the invoice link */
+.invoice-link * {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 5px 5px;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color:black;
+}
+
+.frame {
+  /* padding: 50px; */
+  width: 90%;              /* Fixed width */
+}
+
+.in_progress {
+  background-color: cyan;
+}
+
+.submitted {
+  background-color: lightgreen;
+}
+
+.canceled {
+  background-color: crimson;
+}
+
+.cashed {
+  background-color: green;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+input.productcode {
+    width: 100%;
+}
+input.quantity {
+    width: 100%;
+}
+input.price {
+    width: 100%;
+}
+
+th:first-child, td:first-child {
+  width: 5%; /* Adjust as needed */
+}
+
+th:nth-child(2), td:nth-child(2) {
+  width: 20%;
+}
+
+th:nth-child(3), td:nth-child(3) {
+  width: 10%;
+}
+
+th:nth-child(4), td:nth-child(4) {
+  width: 15%;
+}
+
+th:nth-child(5), td:nth-child(5) {
+  width: 5%;
+}
+h1 {
+    margin-bottom: 0px;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Chrome, Safari, Edge */
+}
+
+.folder-container {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* height: 150vh; */
+}
+
+.folder-card {
+  width: 180px;
+  /* background: white; */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  transition: transform 0.2s ease-in-out;
+}
+
+.folder-card:hover {
+  transform: scale(1.05);
+}
+
+.folder-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.folder-contents {
+  margin-top:10px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 5px;
+}
+.cashed-button {
+  margin-top: 10px;
+}
+.folder-item {
+  font-size: 14px;
+  padding: 5px 0;
+}

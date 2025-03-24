@@ -4,6 +4,7 @@ import os.path
 import datetime
 import dateutil.parser
 import xml.etree.ElementTree as ET
+import os
 
 app = Bottle()
 
@@ -115,6 +116,8 @@ def as_saga_order(receipt):
     factura = ET.SubElement(facturi, "Factura")
     antet = ET.SubElement(factura, "Antet")
     ET.SubElement(antet, "Cod").text = "00378"
+    ET.SubElement(antet,"ClientNume").text = "PERSOANA FIZICA"
+    ET.SubElement(antet,"FacturaTip").text = "B"
     ET.SubElement(antet, "FurnizorCIF").text = "RO4986511"
     todaystr = datetime.datetime.today().strftime("%d.%m.%Y")
     ET.SubElement(antet, "FacturaData").text = todaystr
@@ -126,10 +129,16 @@ def as_saga_order(receipt):
     for idx, product in enumerate(receipt["products"], start=1):
         linie = ET.SubElement(continut, "Linie")
         ET.SubElement(linie, "LinieNrCrt").text = str(idx)
+        ET.SubElement(linie, "Gestiune").text = "0001"
         ET.SubElement(linie, "CodArticolFurnizor").text = product["productCode"]
         ET.SubElement(linie, "Cantitate").text = f"{product['quantity']}"
         ET.SubElement(linie, "Pret").text = f"{product['price']}"
-        
+        valoare = float(product['price'])*float(product["quantity"])
+        ET.SubElement(linie, "Valoare").text = f"{valoare}"
+        ET.SubElement(linie, "ProcTVA").text = f"19"
+        ET.SubElement(linie, "TVA").text = f"{valoare*0.19:.2f}"
+
+    ET.indent(facturi)
     return ET.tostring(facturi, encoding="utf-8").decode("utf-8")
     
 @app.get("/receipts/<id:int>/saga", method=["GET"])
@@ -175,6 +184,6 @@ def delete_receipt(id):
     return {"message": "Receipt deleted"}
 
 if __name__ == "__main__":
-    app.run(host="192.168.1.104", port=8082, debug=True)
+    app.run(host=os.getenv("EPAPER_HOST"), port=int(os.getenv("EPAPER_PORT")), debug=True)
     print("\nShutting down... Saving data.")
     save_data()

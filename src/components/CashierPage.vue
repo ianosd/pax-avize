@@ -22,7 +22,7 @@
       :key="invoice.id"
       class="folder-card"
       :class="stateClass(invoice.state)"
-      draggable="true"
+      :draggable="invoice.state == 'submitted'"
       @dragstart="dragStart($event, invoice)"
     >
       <div class="folder-header">
@@ -60,16 +60,31 @@ import { mapState, mapActions } from "pinia";
 export default {
   computed: {
     ...mapState(useInvoiceStore, ["invoices"]),
+    baseURL() {
+      return this.electronURL ? this.electronURL : process.env.VUE_APP_BASE_URL;
+    }
+  },
+  data() {
+    return {
+      electronURL: ""
+    }
   },
   methods: {
     dragStart(event, invoice) {
-      const fileName = `aviz_${invoice.number}.xml`;
-      const fileURL = `http://192.168.1.104:8082/receipts/${invoice.id}/saga`
-
-      event.dataTransfer.setData(
-        "DownloadURL",
-        `text/xml:${fileName}:${fileURL}`
-      );
+      console.log("Yuhu!")
+      event.preventDefault();
+      // TODO fix this
+      const fileURL = `${this.baseURL}/receipts/${invoice.id}/saga`
+      if (window.electron) {
+        window.electron?.startDrag(fileURL);
+      } else {
+        console.log("Setting data", fileURL);
+        event.dataTransfer.dropEffect = 'move'
+        event.dataTransfer.effectAllowed = 'move'
+        event.dataTransfer.setData(
+          "DownloadURL",
+          `text/xml:aviz_${invoice.number}.xml:${fileURL}`
+        );}
     },
     ...mapActions(useInvoiceStore, ["loadReceipts", "updateReceipt"]),
     getInvoiceTotal(invoice) {
@@ -101,6 +116,8 @@ export default {
   },
   beforeMount() {
     var self = this;
+
+    window.electron?.getBaseUrl().then(url => this.electronURL=url);
     const callback = () => {
       console.log("Self", self);
       self.loadReceipts();

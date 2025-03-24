@@ -1,3 +1,7 @@
+* {
+  font-size: large;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
 .container {
   display: flex;
   flex-direction:column;
@@ -116,8 +120,26 @@ input[type="number"] {
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: grab;
   transition: transform 0.2s ease-in-out;
+}
+
+ @keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(0deg); }
+  20% { transform: rotate(1deg); }
+  30% { transform: rotate(3deg); }
+  40% { transform: rotate(-1deg); }
+  50% { transform: rotate(0deg); }
+  60% { transform: rotate(0deg); }
+  70% { transform: rotate(1deg); }
+  80% { transform: rotate(-3deg); }
+  90% { transform: rotate(1deg); }
+  100% {transform: rotate(0deg);}
+}
+
+.folder-card.submitted {
+  cursor: grab;
+  animation: wiggle 3s ease-in-out infinite;
 }
 
 .folder-card:hover {

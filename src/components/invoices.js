@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-axios.defaults.baseURL = 'http://192.168.1.104:8082';
+if (process.env.IS_ELECTRON) {
+    window.electron?.getBaseUrl().then(url => axios.defaults.baseURL = url);
+} else {
+    console.log("env BASE_URL", process.env.VUE_APP_BASE_URL);
+    axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
+}
 
 export const useInvoiceStore = defineStore('invoices', 
     {
@@ -9,7 +14,7 @@ export const useInvoiceStore = defineStore('invoices',
         },
         actions: {
             async loadReceipts() {
-                var result = await axios.get('/receipts');
+                var result = await axios.get(`/receipts`);
                 console.log("HereA;");
                 console.log(result);
                 this.invoices = result.data;

@@ -2,5 +2,5 @@ module.exports = {
   presets: [
     '@vue/cli-plugin-babel/preset'
   ],
-  plugins: ['@babel/plugin-transform-optional-chaining']
+  plugins: ['@babel/plugin-transform-optional-chaining'],
 }

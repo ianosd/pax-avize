@@ -9,7 +9,7 @@ import CashierPage from './components/CashierPage.vue';
 
 const router = createRouter({
     history: process.env.IS_ELECTRON ? createWebHashHistory() : createWebHistory(),
-    routes: [
+    routes:[
         { path: '/', component: CashierPage },
         { path: '/invoice/:id', component: InvoicePage, name: "invoice", props: true },
         {path: '/operator', component: HomePage}

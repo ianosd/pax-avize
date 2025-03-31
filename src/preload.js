@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld('electron', {
                         return;
                   }
 
-                  const filePath = path.join(__dirname, "aviz.xml");
+                  const filePath = "aviz.xml"
                   const file = fs.createWriteStream(filePath);
                   response.pipe(file);
 

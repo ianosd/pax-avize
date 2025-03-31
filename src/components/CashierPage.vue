@@ -72,18 +72,16 @@ export default {
   methods: {
     dragStart(event, invoice) {
       console.log("Yuhu!")
-      event.preventDefault();
       // TODO fix this
       const fileURL = `${this.baseURL}/receipts/${invoice.id}/saga`
       if (window.electron) {
+        event.preventDefault();
         window.electron?.startDrag(fileURL);
       } else {
         console.log("Setting data", fileURL);
-        event.dataTransfer.dropEffect = 'move'
-        event.dataTransfer.effectAllowed = 'move'
         event.dataTransfer.setData(
           "DownloadURL",
-          `text/xml:aviz_${invoice.number}.xml:${fileURL}`
+          `text/plain:aviz_${invoice.number}.txt:${fileURL}`
         );}
     },
     ...mapActions(useInvoiceStore, ["loadReceipts", "updateReceipt"]),

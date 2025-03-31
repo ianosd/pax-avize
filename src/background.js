@@ -23,7 +23,7 @@ async function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      
+
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -55,6 +55,14 @@ function createMenuTemplate() {
           label: "Setează URL Server",
           click: () => {
             openUrlInputWindow();
+          }
+        },
+        {
+          label: "Toggle Developer Tools",
+          accelerator:
+            process.platform === "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I",
+          click(_item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.toggleDevTools();
           }
         },
         { type: "separator" },
@@ -108,49 +116,39 @@ function openUrlInputWindow() {
 const iconName = path.join(__dirname, 'iconForDragAndDrop.png')
 const icon = fs.createWriteStream(iconName)
 
-// Create a new file to copy - you can also copy existing files.
-fs.writeFileSync(path.join(__dirname, 'drag-and-drop-1.md'), '# First file to test drag and drop')
-fs.writeFileSync(path.join(__dirname, 'drag-and-drop-2.md'), '# Second file to test drag and drop')
-
-function getBaseURL(){
+function getBaseURL() {
   try {
-    const content =  fs.readFileSync(path.join(__dirname,'url.txt'), 'utf8');
+    const content = fs.readFileSync('url.txt', 'utf8');
     return content;
-  } catch (e){
+  } catch (e) {
     console.log(e);
   }
   return "http://192.168.1.104:8082";
 }
 
 function setBaseURL(url) {
-  fs.writeFileSync(path.join(__dirname, 'url.txt'), url);
+  fs.writeFileSync('url.txt', url);
 }
 
 https.get('https://img.icons8.com/ios/452/drag-and-drop.png', (response) => {
   response.pipe(icon)
 })
 
+console.log("iconName", iconName);
+
 ipcMain.on('ondragstart', (event, filePath) => {
   console.log(`filePath=${filePath}`);
   event.sender.startDrag({
-    file: filePath,
+    file: path.join(process.cwd(), filePath),
     icon: iconName
   })
 })
 
 ipcMain.handle("get-base-url", getBaseURL);
 
-app.whenReady().then(createWindow)
-
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
-  }
-})
-
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
   }
 })
 

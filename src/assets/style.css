@@ -123,23 +123,53 @@ input[type="number"] {
   transition: transform 0.2s ease-in-out;
 }
 
- @keyframes wiggle {
-  0% { transform: rotate(0deg); }
-  10% { transform: rotate(0deg); }
-  20% { transform: rotate(1deg); }
-  30% { transform: rotate(3deg); }
-  40% { transform: rotate(-1deg); }
-  50% { transform: rotate(0deg); }
-  60% { transform: rotate(0deg); }
-  70% { transform: rotate(1deg); }
-  80% { transform: rotate(-3deg); }
-  90% { transform: rotate(1deg); }
-  100% {transform: rotate(0deg);}
+@keyframes wiggle {
+	0.00% {transform: rotate(0.00deg);}
+	2.50% {transform: rotate(1.56deg);}
+	5.00% {transform: rotate(2.30deg);}
+	7.50% {transform: rotate(2.12deg);}
+	10.00% {transform: rotate(1.25deg);}
+	12.50% {transform: rotate(0.12deg);}
+	15.00% {transform: rotate(-0.85deg);}
+	17.50% {transform: rotate(-1.35deg);}
+	20.00% {transform: rotate(-1.29deg);}
+	22.50% {transform: rotate(-0.81deg);}
+	25.00% {transform: rotate(-0.14deg);}
+	27.50% {transform: rotate(0.45deg);}
+	30.00% {transform: rotate(0.78deg);}
+	32.50% {transform: rotate(0.78deg);}
+	35.00% {transform: rotate(0.52deg);}
+	37.50% {transform: rotate(0.12deg);}
+	40.00% {transform: rotate(-0.24deg);}
+	42.50% {transform: rotate(-0.45deg);}
+	45.00% {transform: rotate(-0.47deg);}
+	47.50% {transform: rotate(-0.33deg);}
+	50.00% {transform: rotate(-0.10deg);}
+	52.50% {transform: rotate(0.12deg);}
+	55.00% {transform: rotate(0.26deg);}
+	57.50% {transform: rotate(0.28deg);}
+	60.00% {transform: rotate(0.21deg);}
+	62.50% {transform: rotate(0.07deg);}
+	65.00% {transform: rotate(-0.06deg);}
+	67.50% {transform: rotate(-0.15deg);}
+	70.00% {transform: rotate(-0.17deg);}
+	72.50% {transform: rotate(-0.13deg);}
+	75.00% {transform: rotate(-0.05deg);}
+	77.50% {transform: rotate(0.03deg);}
+	80.00% {transform: rotate(0.08deg);}
+	82.50% {transform: rotate(0.10deg);}
+	85.00% {transform: rotate(0.08deg);}
+	87.50% {transform: rotate(0.04deg);}
+	90.00% {transform: rotate(-0.01deg);}
+	92.50% {transform: rotate(-0.05deg);}
+	95.00% {transform: rotate(-0.06deg);}
+	97.50% {transform: rotate(-0.05deg);}
 }
+
 
 .folder-card.submitted {
   cursor: grab;
-  animation: wiggle 3s ease-in-out infinite;
+  animation: wiggle 2s ease-in-out infinite;
 }
 
 .folder-card:hover {

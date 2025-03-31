@@ -5,11 +5,30 @@ import datetime
 import dateutil.parser
 import xml.etree.ElementTree as ET
 import os
+from collections import namedtuple
+import pandas
+
+Config = namedtuple("Config", ["company_CIF", "default_client_id", "default_client_name"])
+
+with open("config.json",  "r") as f:
+    config = Config(**json.load(f))
+
+dtype_dict = {
+    'code': 'string',
+    'name': 'string',
+    'price_no_vat': 'float64',
+    'vat_percent': 'float64',
+    'unit': 'string'
+}
+
+all_products = pandas.read_csv("products.csv", dtype=dtype_dict, index_col="code")
+
+def get_product_by_code(code):
+    return all_products.loc[code]
 
 app = Bottle()
 
 # the decorator
-
 
 # Enable CORS
 def enable_cors(fn):
@@ -115,13 +134,14 @@ def as_saga_order(receipt):
     facturi = ET.Element("Facturi")
     factura = ET.SubElement(facturi, "Factura")
     antet = ET.SubElement(factura, "Antet")
-    ET.SubElement(antet, "Cod").text = "00378"
-    ET.SubElement(antet,"ClientNume").text = "PERSOANA FIZICA"
+    ET.SubElement(antet, "Cod").text = config.default_client_id
+    ET.SubElement(antet,"ClientNume").text = config.default_client_name
     ET.SubElement(antet,"FacturaTip").text = "B"
-    ET.SubElement(antet, "FurnizorCIF").text = "RO4986511"
+    ET.SubElement(antet, "FurnizorCIF").text = config.company_CIF
     todaystr = datetime.datetime.today().strftime("%d.%m.%Y")
     ET.SubElement(antet, "FacturaData").text = todaystr
     ET.SubElement(antet, "FacturaScadenta").text = todaystr
+    ET.SubElement(antet, "FacturaNumar")
 
     detalii = ET.SubElement(factura, "Detalii")
     continut = ET.SubElement(detalii, "Continut")
@@ -129,14 +149,28 @@ def as_saga_order(receipt):
     for idx, product in enumerate(receipt["products"], start=1):
         linie = ET.SubElement(continut, "Linie")
         ET.SubElement(linie, "LinieNrCrt").text = str(idx)
-        ET.SubElement(linie, "Gestiune").text = "0001"
+        ET.SubElement(linie, "Gestiune").text = "0002"
         ET.SubElement(linie, "CodArticolFurnizor").text = product["productCode"]
         ET.SubElement(linie, "Cantitate").text = f"{product['quantity']}"
+
+        try:
+            db_product = get_product_by_code(product["productCode"])
+            unit, tva = product.unit, product.vat_percent
+        except KeyError:
+            print("ERROR! product not found in DB")
+            unit = "BUC"
+            tva = 19
+            
+        ET.SubElement(linie, "UM").text=unit
         ET.SubElement(linie, "Pret").text = f"{product['price']}"
-        valoare = float(product['price'])*float(product["quantity"])
-        ET.SubElement(linie, "Valoare").text = f"{valoare}"
-        ET.SubElement(linie, "ProcTVA").text = f"19"
-        ET.SubElement(linie, "TVA").text = f"{valoare*0.19:.2f}"
+
+        price_with_vat = float(product['price'])
+        price_no_vat = price_with_vat / (1 + tva/100)
+        valoare = price_no_vat*float(product["quantity"])
+
+        ET.SubElement(linie, "Valoare").text = f"{valoare:.2f}"
+        ET.SubElement(linie, "ProcTVA").text = f"{tva}"
+        ET.SubElement(linie, "TVA").text = f"{valoare*tva/100:.2f}"
 
     ET.indent(facturi)
     return ET.tostring(facturi, encoding="utf-8").decode("utf-8")

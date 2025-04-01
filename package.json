@@ -18,6 +18,9 @@
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@babel/plugin-transform-optional-chaining": "^7.25.9",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@teckel/vue-barcode-reader": "^1.1.8",
     "axios": "^1.8.3",
     "core-js": "^3.6.5",
@@ -26,6 +29,7 @@
     "vue": "^3.0.0",
     "vue-barcode-reader": "^1.0.3",
     "vue-barcode-scanner": "^0.8.1",
+    "vue-i18n": "^10.0.6",
     "vue-router": "^4.0.13"
   },
   "devDependencies": {

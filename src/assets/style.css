@@ -1,5 +1,5 @@
 * {
-  font-size: large;
+  font-size: 15pt;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
 .container {
@@ -9,6 +9,31 @@
   align-items: center;
   background-color: #f7f7f7;
   padding: 10px;
+}
+
+button {
+  border-radius: 5pt;
+  min-height: 40px;
+  min-width: 150px;
+  padding: 10px;
+}
+
+.small-button {
+  min-height: auto;
+  min-width: auto;
+  padding: 3px;
+}
+
+.new-button {
+  color: darkgreen;
+}
+
+.delete-button {
+  color: red;
+}
+
+.submit-button {
+  color: green;
 }
 
 .centered {

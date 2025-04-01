@@ -5,7 +5,7 @@
     <button @click="onNewInvoice">Aviz nou</button>
   </nav>
   <div class="centered">
-  <h1>Invoices</h1>
+  <h1>{{ $t('label.avize') }}</h1>
   <div class="frame">
     <div v-for="(invoice, index) in invoices" :key="index" class="invoice-link" :class="stateClass(invoice.state)">
       <RouterLink 

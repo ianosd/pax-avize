@@ -1,75 +1,74 @@
 <template>
   <div class="container">
-  <nav style="width: 100%; display: flex; justify-content:space-around">
-    <button @click="$router.push('/operator')">Lista avize</button>
-    <button @click="onNewInvoice">Aviz nou</button>
-  </nav>
-  <div class="centered" v-if="invoiceLoaded">
-    <h1>Invoice #{{ invoice.number }}</h1>
-    <i style="margin-bottom: 10px;">{{ invoiceStateText }}</i>
-    <table>
-      <tr>
-        <th></th>
-        <th>Cod</th>
-        <th>Cant.</th>
-        <th>Preț</th>
-        <th>Validat</th>
-      </tr>
-      <tr v-for="(item, index) in invoice.products" :key="index">
-        <td>
-          <button
-            @click="deleteProduct(index)"
-            v-bind:disabled="!isEditableInvoice || invoice.products[index].valid"
-          >
-            Delete
-          </button>
-        </td>
-        <ProductView
-          v-model:price="invoice.products[index].price"
-          v-model:productCode="invoice.products[index].productCode"
-          v-model:quantity="invoice.products[index].quantity"
-          v-bind:valid="invoice.products[index].valid"
-          @update:valid="
-            (value) => {
-              invoice.products[index].valid = value;
-              updateReceipt(invoice);
-            }
-          "
-          v-bind:editable="isEditableInvoice"
-        />
-      </tr>
-    </table>
-    <button style="margin-top: 10px" @click="newProduct" v-bind:disabled="!isEditableInvoice">New Product</button>
-    <div
-      style="
+    <nav style="width: 100%; display: flex; justify-content:space-around">
+      <button @click="$router.push('/operator')">Lista avize</button>
+      <button @click="onNewInvoice">Aviz nou</button>
+    </nav>
+    <div class="centered" v-if="invoiceLoaded">
+      <h1>{{ $t('label.aviz') }} #{{ invoice.number }}</h1>
+      <i style="margin-bottom: 10px;">{{ invoiceStateText }}</i>
+      <table>
+        <tr>
+          <th></th>
+          <th>Cod</th>
+          <th>Cant.</th>
+          <th>Preț</th>
+          <th>Validat</th>
+        </tr>
+        <tr v-for="(item, index) in invoice.products" :key="index">
+          <td>
+            <button @click="deleteProduct(index)" class="delete-button small-button" v-bind:disabled="!isEditableInvoice || invoice.products[index].valid">
+              <FontAwesomeIcon :icon="faTrash" />
+            </button>
+          </td>
+          <ProductView v-model:price="invoice.products[index].price"
+            v-model:productCode="invoice.products[index].productCode"
+            v-model:quantity="invoice.products[index].quantity" v-bind:valid="invoice.products[index].valid"
+            @update:valid="
+              (value) => {
+                invoice.products[index].valid = value;
+                updateReceipt(invoice);
+              }
+            " v-bind:editable="isEditableInvoice" />
+        </tr>
+      </table>
+      <button style="margin-top: 10px" class="new-button" @click="newProduct" v-bind:disabled="!isEditableInvoice">
+        <FontAwesomeIcon :icon="faPlus" />
+        {{ $t('label.new_product') }}
+      </button>
+      <div style="
         width: 100%;
         margin-top: 20px;
         display: flex;
         justify-content: space-around;
-      "
-    >
-      <button @click="invoice.state = 'canceled'; updateReceipt(invoice);" v-bind:disabled="!isEditableInvoice">Anulează Aviz</button>
-      <button @click="invoice.state = 'submitted'; updateReceipt(invoice);" v-bind:disabled="!isEditableInvoice || !isValidInvoice">Trimite la caserie</button>
+      ">
+        <button class="delete-button" @click="invoice.state = 'canceled'; updateReceipt(invoice);"
+          v-bind:disabled="!isEditableInvoice"><FontAwesomeIcon :icon="faXmark"/> Anulează Aviz</button>
+        <button class="submit-button" @click="invoice.state = 'submitted'; updateReceipt(invoice);"
+          v-bind:disabled="!isEditableInvoice || !isValidInvoice"><FontAwesomeIcon :icon="faCashRegister"/> Trimite la caserie</button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 import { mapState, mapActions } from "pinia";
 import { useInvoiceStore } from "./invoices";
 import ProductView from "./ProductView.vue";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faPlus, faTrash, faCashRegister, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: {
     ProductView,
+    FontAwesomeIcon
   },
   computed: {
     isValidInvoice() {
       return this.invoice.products.every(p => p.valid);
     },
     isEditableInvoice() {
-     return this.invoice.state == "in_progress";
+      return this.invoice.state == "in_progress";
     },
     invoiceStateText() {
       switch (this.invoice.state) {
@@ -94,7 +93,8 @@ export default {
       productCode: "",
       quantity: 1,
       invoiceLoaded: false,
-      invoice: {}
+      invoice: {},
+      faPlus, faTrash, faCashRegister, faXmark
     };
   },
   watch: {
@@ -114,8 +114,8 @@ export default {
   },
   methods: {
     onNewInvoice() {
-      this.createInvoice("cristi").then(invoice=> {
-        this.$router.push({name:"invoice", params:{id: invoice.id}});
+      this.createInvoice("cristi").then(invoice => {
+        this.$router.push({ name: "invoice", params: { id: invoice.id } });
       });
     },
     ...mapActions(useInvoiceStore, ["createInvoice", "loadReceipts"]),

@@ -192,7 +192,7 @@ def as_saga_order(receipt):
             name=""
 
         ET.SubElement(linie, "LinieNrCrt").text = str(idx)
-        ET.SubElement(linie, "Descriere").text = name
+        # ET.SubElement(linie, "Descriere").text = name
         ET.SubElement(linie, "Gestiune").text = config.gestiune_code
         ET.SubElement(
             linie, "CodArticolClient").text = product["productCode"]
@@ -215,55 +215,6 @@ def as_saga_order(receipt):
 
     ET.indent(facturi)
     return ET.tostring(facturi, encoding="utf-8").decode("utf-8")
-    return """
-<Facturi>
-    <Factura>
-        <Antet>
-            <FurnizorNume>PAX TRANS SRL </FurnizorNume>
-            <FurnizorCIF>RO4986511</FurnizorCIF>
-            <FurnizorNrRegCom>J31/789/1993 </FurnizorNrRegCom>
-            <ClientNume>IONEL</ClientNume>
-            <ClientCod>00001</ClientCod>
-            <FacturaNumar></FacturaNumar>
-            <FacturaTip>B</FacturaTip>
-            <FacturaData>23.03.2025</FacturaData>
-            <FacturaScadenta>23.03.2025</FacturaScadenta>
-            <FacturaTaxareInversa>Nu</FacturaTaxareInversa>
-            <FacturaTVAIncasare>Nu</FacturaTVAIncasare>
-            <FacturaInformatiiSuplimentare> </FacturaInformatiiSuplimentare>
-            <FacturaMoneda>RON</FacturaMoneda>
-            <FacturaCotaTVA>TVA (19%)</FacturaCotaTVA>
-            <FacturaGreutate>0.000</FacturaGreutate>
-            <FacturaAccize>0.00</FacturaAccize>
-            <FacturaIndexSPV> </FacturaIndexSPV>
-        </Antet>
-        <Detalii>
-            <Continut>
-                <Linie>
-                    <LinieNrCrt>1</LinieNrCrt>
-                    <Descriere>MAR</Descriere>
-                    <Gestiune>0001</Gestiune>
-                    <CodArticolClient>00000001</CodArticolClient>
-                    <CodBare />
-                    <InformatiiSuplimentare></InformatiiSuplimentare>
-                    <UM>BUC</UM>
-                    <Cantitate>1.000</Cantitate>
-                    <Pret>20.0000</Pret>
-                    <Valoare>20.00</Valoare>
-                    <ProcTVA>19</ProcTVA>
-                    <TVA>3.80</TVA>
-                </Linie>
-             </Continut>
-            <txtObservatii1></txtObservatii1>
-        </Detalii>
-        <Observatii>
-            <txtObservatii></txtObservatii>
-            <SoldClient></SoldClient>
-            <ModalitatePlata></ModalitatePlata>
-        </Observatii>
-    </Factura>
-</Facturi>
-"""
 
 @app.get("/receipts/<id:int>/saga", method=["GET"])
 @enable_cors

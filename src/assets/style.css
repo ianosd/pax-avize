@@ -24,15 +24,12 @@ button {
   padding: 3px;
 }
 
-.new-button {
-  color: black;
-}
 
-.delete-button {
+.delete-button:enabled {
   color: red;
 }
 
-.submit-button {
+.submit-button:enabled {
   color: green;
 }
 

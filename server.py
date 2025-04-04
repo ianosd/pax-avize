@@ -7,11 +7,12 @@ import xml.etree.ElementTree as ET
 import os
 from collections import namedtuple
 import pandas
+import sys
 
 Config = namedtuple("Config", [
                     "company_CIF", "default_client_id", "default_client_name", "gestiune_code"])
 
-with open("config.json",  "r") as f:
+with open(os.path.join(os.getenv("EPAPER_DATA"), "config.json"),  "r") as f:
     config = Config(**json.load(f))
 
 dtype_dict = {
@@ -23,7 +24,7 @@ dtype_dict = {
 }
 
 all_products = pandas.read_csv(
-    "products.csv", dtype=dtype_dict, index_col="code")
+    os.path.join(os.getenv("EPAPER_DATA"), "products.csv"), dtype=dtype_dict, index_col="code")
 
 
 def get_product_by_code(code):
@@ -56,7 +57,7 @@ def enable_cors(fn):
     return _enable_cors
 
 
-DATA_FILE = "receipts.json"
+DATA_FILE = os.path.join(os.getenv("EPAPER_DATA"), "receipts.json")
 
 
 def load_data():

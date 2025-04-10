@@ -23,8 +23,8 @@ dtype_dict = {
     'unit': 'string'
 }
 
-all_products = pandas.read_csv(
-    os.path.join(os.getenv("EPAPER_DATA"), "products.csv"), dtype=dtype_dict, index_col="code")
+all_products = pandas.read_excel(
+    os.path.join(os.getenv("EPAPER_DATA"), "produse.xls"), dtype=dtype_dict, index_col="cod")
 
 
 def get_product_by_code(code):
@@ -151,6 +151,14 @@ def get_receipt(id):
         return {"error": "Receipt not found"}
     return receipt
 
+@app.get("/products/<code>", method=["GET"])
+@enable_cors
+def get_product(code):
+    try:
+        db_product = get_product_by_code(code)
+    except KeyError:
+        return json.dumps([])
+    return json.dumps([{"cod": code, "pret_v_tva": db_product.pret_v_tva, "name": db_product.denumire, "stoc": db_product.stoc}])
 
 def as_saga_order(receipt):
     facturi = ET.Element("Facturi")
@@ -185,7 +193,7 @@ def as_saga_order(receipt):
 
         try:
             db_product = get_product_by_code(product["productCode"])
-            unit, tva, name = db_product.unit, db_product.vat_percent, db_product["name"]
+            unit, tva, name = db_product.um, db_product.tva, db_product.denumire
         except KeyError:
             print("ERROR! product not found in DB")
             unit = "BUC"
@@ -261,6 +269,13 @@ def delete_receipt(id):
     data["receipts"].remove(receipt)
     return {"message": "Receipt deleted"}
 
+
+import signal
+def handler(*args):
+    print("Saving data...")
+    save_data()
+
+signal.signal(signal.SIGTERM, handler)
 
 if __name__ == "__main__":
     app.run(host=os.getenv("EPAPER_HOST"), port=int(

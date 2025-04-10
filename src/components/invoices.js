@@ -30,6 +30,9 @@ export const useInvoiceStore = defineStore('invoices',
             async updateReceipt(receipt) {
                 console.log("Doing it!");
                 await axios.put("/receipts", receipt);
+            },
+            async getProductByCode(cod) {
+                return await axios.get(`/products/${cod}`);
             }
         }
     }

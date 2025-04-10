@@ -13,39 +13,32 @@
           <th>Cod</th>
           <th>Cant.</th>
           <th>Preț</th>
-          <th>Validat</th>
+          <th>P. Saga </th>
         </tr>
-        <tr v-for="(item, index) in invoice.products" :key="index">
-          <td>
-            <button @click="deleteProduct(index)" class="delete-button small-button" v-bind:disabled="!isEditableInvoice || invoice.products[index].valid">
-              <FontAwesomeIcon :icon="faTrash" />
-            </button>
-          </td>
-          <ProductView v-model:price="invoice.products[index].price"
+          <ProductView v-for="(item, index) in invoice.products" :key="index" 
+          v-model:price="invoice.products[index].price"
             v-model:productCode="invoice.products[index].productCode"
-            v-model:quantity="invoice.products[index].quantity" v-bind:valid="invoice.products[index].valid"
-            @update:valid="
-              (value) => {
-                invoice.products[index].valid = value;
-                updateReceipt(invoice);
-              }
-            " v-bind:editable="isEditableInvoice" />
-        </tr>
+            v-model:quantity="invoice.products[index].quantity"
+            v-bind:editable="isEditableInvoice"
+            @deleteItem="deleteProduct(index)" />
       </table>
       <button style="margin-top: 10px" class="new-button" @click="newProduct" v-bind:disabled="!isEditableInvoice">
         <FontAwesomeIcon :icon="faPlus" />
         {{ $t('label.new_product') }}
       </button>
+      <span style="margin-top: 10px;">Total: <b>{{ total }}</b></span>
       <div style="
         width: 100%;
         margin-top: 20px;
         display: flex;
         justify-content: space-around;
       ">
-        <button class="delete-button" @click="invoice.state = 'canceled'; updateReceipt(invoice);"
+        <button v-if="isModifyable" class="delete-button" @click="invoice.state = 'canceled'; updateReceipt(invoice);"
           v-bind:disabled="!isEditableInvoice"><FontAwesomeIcon :icon="faXmark"/> Anulează Aviz</button>
-        <button class="submit-button" @click="invoice.state = 'submitted'; updateReceipt(invoice);"
-          v-bind:disabled="!isEditableInvoice || !isValidInvoice"><FontAwesomeIcon :icon="faCashRegister"/> Trimite la caserie</button>
+        <button v-if="isModifyable" class="submit-button" @click="invoice.state = 'submitted'; updateReceipt(invoice);"
+          v-bind:disabled="!isValidInvoice"><FontAwesomeIcon :icon="faCashRegister"/> Trimite la caserie</button>
+        <button v-if="!isModifyable" class="edit-button" @click="invoice.state = 'in_progress'; updateReceipt(invoice);"
+          ><FontAwesomeIcon :icon="faEdit"/>Modifică</button>
       </div>
     </div>
   </div>
@@ -56,7 +49,7 @@ import { mapState, mapActions } from "pinia";
 import { useInvoiceStore } from "./invoices";
 import ProductView from "./ProductView.vue";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faPlus, faTrash, faCashRegister, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faCashRegister, faXmark, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: {
@@ -64,8 +57,19 @@ export default {
     FontAwesomeIcon
   },
   computed: {
+    isModifyable() {
+      console.log("Invoice", this.invoice.state);
+      return !['submitted', 'canceled'].includes(this.invoice.state);
+    },
+    total () {
+      return this.invoice.products.map(p => p.quantity*p.price).reduce((s, v) => s+v, 0);
+    },
     isValidInvoice() {
-      return this.invoice.products.every(p => p.valid);
+      function isValid(p) {
+        return p.productCode != "" && p.quantity != "" && p.price != "";
+      }
+
+      return this.invoice.products.length > 0 && this.invoice.products.every(isValid);
     },
     isEditableInvoice() {
       return this.invoice.state == "in_progress";
@@ -94,7 +98,7 @@ export default {
       quantity: 1,
       invoiceLoaded: false,
       invoice: {},
-      faPlus, faTrash, faCashRegister, faXmark
+      faPlus, faTrash, faCashRegister, faXmark, faEdit
     };
   },
   watch: {
@@ -132,8 +136,7 @@ export default {
       this.invoice.products.push({
         productCode: "",
         quantity: "",
-        price: "",
-        valid: false,
+        price: ""
       });
       this.updateReceipt(this.invoice);
     },

@@ -59,7 +59,7 @@ import { mapState, mapActions } from "pinia";
 
 export default {
   computed: {
-    ...mapState(useOrderStore, ["order"]),
+    ...mapState(useOrderStore, ["orders"]),
     baseURL() {
       return this.electronURL ? this.electronURL : process.env.VUE_APP_BASE_URL;
     }

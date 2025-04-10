@@ -5,16 +5,16 @@
 <script>
 
 import {mapState, mapActions} from 'pinia'
-import { useInvoiceStore } from './components/invoices'
+import { useOrderStore } from './components/orders'
 import './assets/style.css'
 
 export default {
   name: 'App',
   computed: {
-    ...mapState(useInvoiceStore, ["invoices"]),
+    ...mapState(useOrderStore, ["orders"]),
   },
   methods: {
-    ...mapActions(useInvoiceStore, ["loadReceipts"])
+    ...mapActions(useOrderStore, ["loadReceipts"])
   },
   async beforeMount () {
     // TODO why does this fail

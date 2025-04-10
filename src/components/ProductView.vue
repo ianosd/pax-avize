@@ -1,6 +1,6 @@
 <script>
 import { mapActions } from "pinia";
-import { useInvoiceStore } from "./invoices";
+import { useOrderStore } from "./orders";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReticentUpdater from "./ReticentCaller";
@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useInvoiceStore, ["getUniqueProductByCode"]),
+    ...mapActions(useOrderStore, ["getUniqueProductByCode"]),
   }
 };
 </script>

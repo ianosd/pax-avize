@@ -2,21 +2,21 @@
   <div class="container">
   <nav style="width: 100%; display: flex; justify-content:space-around">
     <button @click="$router.push('/operator')">Lista avize</button>
-    <button @click="onNewInvoice">Aviz nou</button>
+    <button @click="onNewOrder">Aviz nou</button>
   </nav>
   <div class="centered">
   <h1>{{ $t('label.avize') }}</h1>
   <div class="frame">
-    <div v-for="(invoice, index) in invoices" :key="index" class="invoice-link" :class="stateClass(invoice.state)">
+    <div v-for="(Order, index) in Orders" :key="index" class="Order-link" :class="stateClass(Order.state)">
       <RouterLink 
-              :to="{ name: 'invoice', params: {id:invoice.id} }"
+              :to="{ name: 'Order', params: {id:Order.id} }"
             >
-        <span style="color:black">#{{ invoice.number }}</span>
+        <span style="color:black">#{{ Order.number }}</span>
         <span>
-          {{ stateText(invoice.state) }}
+          {{ stateText(Order.state) }}
         </span>
         <!-- TODO currency! -->
-        <span>{{ getInvoiceTotal(invoice) }} </span>
+        <span>{{ getOrderTotal(Order) }} </span>
       </RouterLink>
     </div>
     </div>
@@ -25,21 +25,21 @@
 </template>
 
 <script>
-import { useInvoiceStore } from './invoices'
+import { useOrderStore } from './Orders'
 import { mapState, mapActions } from 'pinia';
 export default {
   computed: {
-    ...mapState(useInvoiceStore, ["invoices"]),
+    ...mapState(useOrderStore, ["Orders"]),
   },
   methods: {
-    onNewInvoice() {
-      this.createInvoice("cristi").then(invoice=> {
-        this.$router.push({name:"invoice", params:{id:invoice.id}});
+    onNewOrder() {
+      this.createOrder("cristi").then(Order=> {
+        this.$router.push({name:"Order", params:{id:Order.id}});
       });
     },
-    ...mapActions(useInvoiceStore, ["createInvoice", "loadReceipts"]),
-    getInvoiceTotal(invoice) {
-      const value = invoice.products.map(p => p.price*p.quantity).reduce((acc, a) => acc + a, 0);
+    ...mapActions(useOrderStore, ["createOrder", "loadReceipts"]),
+    getOrderTotal(Order) {
+      const value = Order.products.map(p => p.price*p.quantity).reduce((acc, a) => acc + a, 0);
       if (!isNaN(value)) {
         return `${value.toFixed(2)} RON`;
       } else {
@@ -69,5 +69,5 @@ export default {
 </script>
 
 <style scoped>
-/* Add styling for the invoice page */
+/* Add styling for the Order page */
 </style>

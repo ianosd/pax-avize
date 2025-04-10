@@ -40,11 +40,11 @@ button {
   width:100%;
 }
 
-.invoice-link {
+.order-link {
     border-radius: 5px;
 }
-/* Styling for the invoice link */
-.invoice-link * {
+/* Styling for the order link */
+.order-link * {
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -1,15 +1,15 @@
 <template>
   <h1>Avize</h1>
   <!-- <div class="frame">
-    <div v-for="(invoice, index) in invoices" :key="index" class="invoice-link" :class="stateClass(invoice.state)">
+    <div v-for="(order, index) in orders" :key="index" class="order-link" :class="stateClass(order.state)">
       <RouterLink 
-              :to="{ name: 'invoice', params: {id:invoice.id} }"
+              :to="{ name: 'order', params: {id:order.id} }"
             >
-        <span style="color:black">#{{ invoice.number }}</span>
+        <span style="color:black">#{{ order.number }}</span>
         <span>
-          {{ stateText(invoice.state) }}
+          {{ stateText(order.state) }}
         </span>
-        <span>{{ getInvoiceTotal(invoice) }} </span>
+        <span>{{ getOrderTotal(order) }} </span>
       </RouterLink>
     </div>
     </div>
@@ -18,21 +18,21 @@
 
   <div class="folder-container">
     <div
-      v-for="(invoice, index) in invoices"
-      :key="invoice.id"
+      v-for="(order, index) in orders"
+      :key="order.id"
       class="folder-card"
-      :class="stateClass(invoice.state)"
-      :draggable="invoice.state == 'submitted'"
-      @dragstart="dragStart($event, invoice)"
+      :class="stateClass(order.state)"
+      :draggable="order.state == 'submitted'"
+      @dragstart="dragStart($event, order)"
     >
       <div class="folder-header">
-        <b>#{{ invoice.number }}</b>
-        <span>{{ stateText(invoice.state) }}</span>
+        <b>#{{ order.number }}</b>
+        <span>{{ stateText(order.state) }}</span>
       </div>
 
       <div class="folder-contents">
         <div
-          v-for="productEntry in invoice.products"
+          v-for="productEntry in order.products"
           :key="productEntry.productCode"
           class="folder-item"
         >
@@ -41,11 +41,11 @@
         </div>
       </div>
       <button
-        :disabled="invoice.state != 'submitted'"
+        :disabled="order.state != 'submitted'"
         class="cashed-button"
         @click="
-          invoices[index].state = 'cashed';
-          updateReceipt(invoices[index]);
+          orders[index].state = 'cashed';
+          updateOrder(orders[index]);
         "
       >
         Încasat
@@ -54,12 +54,12 @@
   </div>
 </template>
 <script>
-import { useInvoiceStore } from "./invoices";
+import { useOrderStore } from "./orders";
 import { mapState, mapActions } from "pinia";
 
 export default {
   computed: {
-    ...mapState(useInvoiceStore, ["invoices"]),
+    ...mapState(useOrderStore, ["order"]),
     baseURL() {
       return this.electronURL ? this.electronURL : process.env.VUE_APP_BASE_URL;
     }
@@ -70,10 +70,10 @@ export default {
     }
   },
   methods: {
-    dragStart(event, invoice) {
+    dragStart(event, order) {
       console.log("Yuhu!")
       // TODO fix this
-      const fileURL = `${this.baseURL}/receipts/${invoice.id}/saga`
+      const fileURL = `${this.baseURL}/receipts/${order.id}/saga`
       if (window.electron) {
         event.preventDefault();
         window.electron?.startDrag(fileURL);
@@ -81,12 +81,12 @@ export default {
         console.log("Setting data", fileURL);
         event.dataTransfer.setData(
           "DownloadURL",
-          `text/plain:aviz_${invoice.number}.txt:${fileURL}`
+          `text/plain:aviz_${order.number}.txt:${fileURL}`
         );}
     },
-    ...mapActions(useInvoiceStore, ["loadReceipts", "updateReceipt"]),
-    getInvoiceTotal(invoice) {
-      const value = invoice.products
+    ...mapActions(useOrderStore, ["loadReceipts", "updateOrder"]),
+    getOrderTotal(order) {
+      const value = order.products
         .map((p) => p.price * p.quantity)
         .reduce((acc, a) => acc + a, 0);
       if (!isNaN(value)) {

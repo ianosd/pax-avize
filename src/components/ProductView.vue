@@ -27,6 +27,7 @@ export default {
           this.dbProduct = null;
         }
       },
+      // TODO move the initial dbProduct setup to onMounted, or even better, inside the product store, so that it is fetched only once
       immediate: true
     }
   },

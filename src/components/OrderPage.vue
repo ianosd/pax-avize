@@ -33,7 +33,7 @@
         <button v-if="isModifyable" class="delete-button" @click="order.state = 'canceled'; updateOrder(order);"
           v-bind:disabled="!isEditableorder"><FontAwesomeIcon :icon="faXmark"/> Anulează Aviz</button>
         <button v-if="isModifyable" class="submit-button" @click="order.state = 'submitted'; updateOrder(order);"
-          v-bind:disabled="!isValidorder"><FontAwesomeIcon :icon="faCashRegister"/> Trimite la caserie</button>
+          v-bind:disabled="!(isEditableorder && isValidorder)"><FontAwesomeIcon :icon="faCashRegister"/> Trimite la caserie</button>
         <button v-if="!isModifyable" class="edit-button" @click="order.state = 'in_progress'; updateOrder(order);"
           ><FontAwesomeIcon :icon="faEdit"/>Modifică</button>
       </div>
@@ -57,7 +57,6 @@ export default {
   },
   computed: {
     isModifyable() {
-      console.log("order", this.order.state);
       return !['submitted', 'canceled'].includes(this.order.state);
     },
     total () {

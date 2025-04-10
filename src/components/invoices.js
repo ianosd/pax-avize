@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+
 if (process.env.IS_ELECTRON) {
     window.electron?.getBaseUrl().then(url => axios.defaults.baseURL = url);
 } else {

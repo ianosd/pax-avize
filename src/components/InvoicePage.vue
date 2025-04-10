@@ -124,7 +124,6 @@ export default {
     },
     ...mapActions(useInvoiceStore, ["createInvoice", "loadReceipts"]),
     updateInvoice(invoices, id) {
-      console.log(this.$props);
       const index = invoices.findIndex(
         (invoice) => invoice.id == id
       );

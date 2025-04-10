@@ -22,6 +22,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@teckel/vue-barcode-reader": "^1.1.8",
+    "@vueuse/core": "^13.1.0",
     "axios": "^1.8.3",
     "core-js": "^3.6.5",
     "pinia": "^2.3.1",

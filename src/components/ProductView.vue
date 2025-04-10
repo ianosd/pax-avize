@@ -3,6 +3,7 @@ import { mapActions } from "pinia";
 import { useInvoiceStore } from "./invoices";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import ReticentUpdater from "./ReticentCaller";
 
 export default {
   components: {
@@ -16,43 +17,44 @@ export default {
     "deleteItem",
     "updateDescription"
   ],
+  watch: {
+    productCode(newCode) {
+      this.code = newCode;
+      if (this.code) {
+        this.reticentCaller.trigger();
+      } else {
+        this.dbProduct = null;
+      }
+    }
+  },
   data() {
     return {
+      reticentCaller: new ReticentUpdater(200, this.getDBProduct, (product) => { this.dbProduct = product }),
       dbProduct: null,
-      faTrash
+      faTrash,
+      code: null
     }
   },
   methods: {
     ...mapActions(useInvoiceStore, ["getProductByCode"]),
-    updateProductInfo(code) {
-      // TODO optimize
-      console.log("updating code");
-      if (!code) {
-        this.dbProduct = null;
-        return;
+    async getDBProduct() {
+      if (!this.code) {
+        return null;
       }
-      this.getProductByCode(code).then(response => {
-        const products = response.data;
-        console.log("products", products);
-        if (products.length != 1) {
-          this.dbProduct = null;
-          return;
-        }
-        const product = products[0];
-        if (product.cod == this.productCode) {
-          console.log("updating Product", product);
-          this.dbProduct = product;
-        } else {
-          this.dbProduct = null;
-        }
-      })
+      const response = await this.getProductByCode(this.code);
+      const products = response.data;
+      console.log("products", products);
+      if (products.length != 1) {
+        return null;
+      }
+      return products[0];
     }
   }
 };
 </script>
 
 <template>
-  <tr :class="dbProduct?'noborder':''">
+  <tr :class="dbProduct ? 'noborder' : ''">
     <td>
       <button @click="$emit('deleteItem', null)" class="delete-button small-button" v-bind:disabled="!editable">
         <FontAwesomeIcon :icon="faTrash" />
@@ -60,7 +62,7 @@ export default {
     </td>
     <td>
       <input v-if="editable" class="productcode" type="number" v-bind:value="productCode" placeholder="Cod"
-        @input="(event) => { $emit('update:productCode', event.target.value); updateProductInfo(event.target.value); }" />
+        @input="(event) => $emit('update:productCode', event.target.value)" />
       <span v-else>{{ productCode }}</span>
     </td>
     <td>

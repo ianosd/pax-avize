@@ -7,16 +7,16 @@
   <div class="centered">
   <h1>{{ $t('label.avize') }}</h1>
   <div class="frame">
-    <div v-for="(Order, index) in Orders" :key="index" class="Order-link" :class="stateClass(Order.state)">
+    <div v-for="(order, index) in orders" :key="index" class="order-link" :class="stateClass(order.state)">
       <RouterLink 
-              :to="{ name: 'Order', params: {id:Order.id} }"
+              :to="{ name: 'order', params: {id:order.id} }"
             >
-        <span style="color:black">#{{ Order.number }}</span>
+        <span style="color:black">#{{ order.number }}</span>
         <span>
-          {{ stateText(Order.state) }}
+          {{ stateText(order.state) }}
         </span>
         <!-- TODO currency! -->
-        <span>{{ getOrderTotal(Order) }} </span>
+        <span>{{ getOrderTotal(order) }} </span>
       </RouterLink>
     </div>
     </div>
@@ -25,21 +25,21 @@
 </template>
 
 <script>
-import { useOrderStore } from './Orders'
+import { useOrderStore } from './orders'
 import { mapState, mapActions } from 'pinia';
 export default {
   computed: {
-    ...mapState(useOrderStore, ["Orders"]),
+    ...mapState(useOrderStore, ["orders"]),
   },
   methods: {
     onNewOrder() {
-      this.createOrder("cristi").then(Order=> {
-        this.$router.push({name:"Order", params:{id:Order.id}});
+      this.createOrder("cristi").then(order=> {
+        this.$router.push({name:"order", params:{id:order.id}});
       });
     },
     ...mapActions(useOrderStore, ["createOrder", "loadReceipts"]),
-    getOrderTotal(Order) {
-      const value = Order.products.map(p => p.price*p.quantity).reduce((acc, a) => acc + a, 0);
+    getOrderTotal(order) {
+      const value = order.products.map(p => p.price*p.quantity).reduce((acc, a) => acc + a, 0);
       if (!isNaN(value)) {
         return `${value.toFixed(2)} RON`;
       } else {

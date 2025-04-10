@@ -18,13 +18,16 @@ export default {
     "updateDescription"
   ],
   watch: {
-    productCode(newCode) {
-      this.code = newCode;
-      if (this.code) {
-        this.reticentCaller.trigger();
-      } else {
-        this.dbProduct = null;
-      }
+    productCode: {
+      handler(newCode) {
+        this.code = newCode;
+        if (this.code) {
+          this.reticentCaller.trigger();
+        } else {
+          this.dbProduct = null;
+        }
+      },
+      immediate: true
     }
   },
   data() {

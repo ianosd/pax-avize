@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-  <nav style="width: 100%; display: flex; justify-content:space-around">
-    <button @click="$router.push('/operator')">Lista avize</button>
-    <button @click="onNewOrder">Aviz nou</button>
-  </nav>
+  <OperatorNav></OperatorNav>
   <div class="centered">
   <h1>{{ $t('label.avize') }}</h1>
   <div class="frame">
@@ -25,19 +22,18 @@
 </template>
 
 <script>
+import OperatorNav from './OperatorNav.vue';
 import { useOrderStore } from './orders'
 import { mapState, mapActions } from 'pinia';
 export default {
+  components: {
+    OperatorNav
+  },
   computed: {
     ...mapState(useOrderStore, ["orders"]),
   },
   methods: {
-    onNewOrder() {
-      this.createOrder("cristi").then(order=> {
-        this.$router.push({name:"order", params:{id:order.id}});
-      });
-    },
-    ...mapActions(useOrderStore, ["createOrder", "loadReceipts"]),
+    ...mapActions(useOrderStore, ["loadReceipts"]),
     getOrderTotal(order) {
       const value = order.products.map(p => p.price*p.quantity).reduce((acc, a) => acc + a, 0);
       if (!isNaN(value)) {
@@ -54,16 +50,14 @@ export default {
         case "in_progress":
           return "în curs de editare";
         case "canceled":
-          return "anulată";
+          return "anulat";
         case "cashed":
-          return "încasată";
+          return "încasat";
         case "submitted":
-          return "trimisă la caserie"
+          return "trimis la caserie"
       }
       return "";
     }
-  
-
   }
 };
 </script>

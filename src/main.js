@@ -9,12 +9,12 @@ import OrderListPage from './components/OrderListPage.vue';
 import CashierPage from './components/CashierPage.vue';
 
 const router = createRouter({
-    history: process.env.IS_ELECTRON ? createWebHashHistory() : createWebHistory(),
-    routes:[
-        { path: '/', component: CashierPage },
-        { path: '/order/:id', component: OrderPage, name: "order", props: true },
-        {path: '/operator', component: OrderListPage}
-    ]
+  history: process.env.IS_ELECTRON ? createWebHashHistory() : createWebHistory(),
+  routes: [
+    { path: '/', component: CashierPage },
+    { path: '/order/:id', component: OrderPage, name: "order", props: true },
+    { path: '/operator', component: OrderListPage }
+  ]
 })
 
 const i18n = createI18n({

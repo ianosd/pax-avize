@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <nav style="width: 100%; display: flex; justify-content:space-around">
-      <button @click="$router.push('/operator')">Lista avize</button>
-      <button @click="onNeworder">Aviz nou</button>
-    </nav>
+    <OperatorNav></OperatorNav>
     <div class="centered" v-if="orderLoaded">
       <h1>{{ $t('label.aviz') }} #{{ order.number }}</h1>
       <i style="margin-bottom: 10px;">{{ orderStateText }}</i>
@@ -50,11 +47,13 @@ import { useOrderStore } from "./orders";
 import ProductView from "./ProductView.vue";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faPlus, faTrash, faCashRegister, faXmark, faEdit } from '@fortawesome/free-solid-svg-icons';
+import OperatorNav from "./OperatorNav.vue";
 
 export default {
   components: {
     ProductView,
-    FontAwesomeIcon
+    FontAwesomeIcon,
+    OperatorNav
   },
   computed: {
     isModifyable() {
@@ -117,12 +116,7 @@ export default {
     },
   },
   methods: {
-    onNeworder() {
-      this.createOrder("cristi").then(order => {
-        this.$router.push({ name: "order", params: { id: order.id } });
-      });
-    },
-    ...mapActions(useOrderStore, ["createOrder", "loadReceipts"]),
+    ...mapActions(useOrderStore, ["loadReceipts"]),
     loadOrder(orders, id) {
       const index = orders.findIndex(
         (order) => order.id == id

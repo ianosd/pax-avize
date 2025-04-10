@@ -2,7 +2,7 @@ function cancellableUpdate(fetchFunction, updateFunction, timeout) {
     var cancelled = false;
     const wait = new Promise(resolve => { setTimeout(resolve, timeout) });
     const performFetch = wait.then(() => {
-        if (!cancelled) {return fetchFunction()}
+        if (!cancelled) { return fetchFunction() }
     });
     const performUpdate = performFetch.then((fetchResult) => {
         if (!cancelled) {
@@ -23,10 +23,10 @@ export default class ReticentUpdater {
         this.updateFunction = updateFunction;
     }
 
-    trigger() {
+    triggerUpdate(fetchArg) {
         if (this.updatePromise) {
             this.updatePromise.cancel()
         }
-        this.updatePromise = cancellableUpdate(this.fetchFunction, this.updateFunction, this.pauseBeforeCallingMilliSeconds);
+        this.updatePromise = cancellableUpdate(() => this.fetchFunction(fetchArg), this.updateFunction, this.pauseBeforeCallingMilliSeconds);
     }
 }

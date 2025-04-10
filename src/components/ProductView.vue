@@ -20,9 +20,8 @@ export default {
   watch: {
     productCode: {
       handler(newCode) {
-        this.code = newCode;
-        if (this.code) {
-          this.reticentCaller.trigger();
+        if (newCode) {
+          this.reticentCaller.triggerUpdate(newCode);
         } else {
           this.dbProduct = null;
         }
@@ -33,26 +32,13 @@ export default {
   },
   data() {
     return {
-      reticentCaller: new ReticentUpdater(200, this.getDBProduct, (product) => { this.dbProduct = product }),
+      reticentCaller: new ReticentUpdater(200, this.getUniqueProductByCode, (product) => { this.dbProduct = product }),
       dbProduct: null,
-      faTrash,
-      code: null
+      faTrash
     }
   },
   methods: {
-    ...mapActions(useInvoiceStore, ["getProductByCode"]),
-    async getDBProduct() {
-      if (!this.code) {
-        return null;
-      }
-      const response = await this.getProductByCode(this.code);
-      const products = response.data;
-      console.log("products", products);
-      if (products.length != 1) {
-        return null;
-      }
-      return products[0];
-    }
+    ...mapActions(useInvoiceStore, ["getUniqueProductByCode"]),
   }
 };
 </script>

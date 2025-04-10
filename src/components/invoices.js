@@ -8,10 +8,10 @@ if (process.env.IS_ELECTRON) {
     axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 }
 
-export const useInvoiceStore = defineStore('invoices', 
+export const useInvoiceStore = defineStore('invoices',
     {
         state: () => {
-            return {invoices: []}
+            return { invoices: [] }
         },
         actions: {
             async loadReceipts() {
@@ -21,7 +21,7 @@ export const useInvoiceStore = defineStore('invoices',
                 this.invoices = result.data;
             },
             async createInvoice(personArg) {
-                var result = await axios.post('/receipts', {person: personArg});
+                var result = await axios.post('/receipts', { person: personArg });
                 var receipt = result.data.receipt;
                 this.invoices.push(receipt);
                 console.log(`The invoices: ${this.invoices}`);
@@ -32,8 +32,17 @@ export const useInvoiceStore = defineStore('invoices',
                 console.log("Doing it!");
                 await axios.put("/receipts", receipt);
             },
-            async getProductByCode(cod) {
-                return await axios.get(`/products/${cod}`);
+            async getUniqueProductByCode(cod) {
+                if (!cod) {
+                    return null;
+                }
+                const response = await axios.get(`/products/${cod}`);
+                const products = response.data;
+                console.log("products", products);
+                if (products.length != 1) {
+                    return null;
+                }
+                return products[0];
             }
         }
     }

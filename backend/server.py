@@ -26,10 +26,8 @@ dtype_dict = {
 all_products = pandas.read_excel(
     os.path.join(os.getenv("EPAPER_DATA"), "produse.xls"), dtype=dtype_dict, index_col="cod")
 
-
 def get_product_by_code(code):
     return all_products.loc[code]
-
 
 init_data()
 app = Bottle()

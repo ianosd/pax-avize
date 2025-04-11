@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 import os
 from collections import namedtuple
 import pandas
-import sys
+from daq import save_data, get_data, init_data
 
 Config = namedtuple("Config", [
                     "company_CIF", "default_client_id", "default_client_name", "gestiune_code"])
@@ -31,6 +31,7 @@ def get_product_by_code(code):
     return all_products.loc[code]
 
 
+init_data()
 app = Bottle()
 
 def enable_cors(fn):
@@ -51,38 +52,20 @@ def enable_cors(fn):
 
     return _enable_cors
 
-
-DATA_FILE = os.path.join(os.getenv("EPAPER_DATA"), "receipts.json")
-
-
-def load_data():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return {"receipts": []}
-
-
-def save_data():
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4)
-
-
-data = load_data()
-
 VALID_STATES = {"canceled", "in_progress", "submitted", "cashed"}
 
 # Helper function to find a receipt by id and person
 
 
 def find_receipt(id):
-    return next((r for r in data["receipts"] if r["id"] == id), None)
+    return next((r for r in get_data()["receipts"] if r["id"] == id), None)
 
 
 def create_receipt_from_person(person, time=None):
     if time is None:
         time = datetime.datetime.now()
-    id = max([0, *(receipt["id"] for receipt in data["receipts"])]) + 1
-    number = max([0, *(receipt["number"] for receipt in data["receipts"]
+    id = max([0, *(receipt["id"] for receipt in get_data()["receipts"])]) + 1
+    number = max([0, *(receipt["number"] for receipt in get_data()["receipts"]
                        if dateutil.parser.isoparse(receipt["date_created"]).date() == time.date())]) + 1
     return {
         "id": id, "number": number, "person": person,
@@ -99,7 +82,8 @@ def create_receipt():
         return {"error": "Invalid data"}
 
     receipt = create_receipt_from_person(req["person"])
-    data["receipts"].append(receipt)
+    get_data()["receipts"].append(receipt)
+    save_data()
     response.status = 201
     return {"message": "Receipt created", "receipt": receipt}
 
@@ -134,7 +118,7 @@ def get_filter(query):
 def get_receipts():
     filter_fn = get_filter(request.query)
     response.content_type = "application/json"
-    return json.dumps([r for r in data["receipts"] if filter_fn(r)])
+    return json.dumps([r for r in get_data()["receipts"] if filter_fn(r)])
 
 
 @app.get("/receipts/<id:int>", method=["GET"])
@@ -251,6 +235,7 @@ def update_receipt():
         return {"error": "Invalid state"}
 
     receipt.update(req)
+    save_data()
     return {"message": "Receipt updated"}
 
 
@@ -261,16 +246,9 @@ def delete_receipt(id):
         response.status = 404
         return {"error": "Receipt not found"}
 
-    data["receipts"].remove(receipt)
-    return {"message": "Receipt deleted"}
-
-
-import signal
-def handler(*args):
-    print("Saving data...")
+    get_data()["receipts"].remove(receipt)
     save_data()
-
-signal.signal(signal.SIGTERM, handler)
+    return {"message": "Receipt deleted"}
 
 if __name__ == "__main__":
     app.run(host=os.getenv("EPAPER_HOST"), port=int(

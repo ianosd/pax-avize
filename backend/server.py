@@ -33,11 +33,6 @@ def get_product_by_code(code):
 
 app = Bottle()
 
-# the decorator
-
-# Enable CORS
-
-
 def enable_cors(fn):
     def _enable_cors(*args, **kwargs):
         # set CORS headers

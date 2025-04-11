@@ -1,0 +1,4 @@
+.env*
+css
+dist
+dist_electron

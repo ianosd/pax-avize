@@ -238,18 +238,6 @@ def update_receipt():
     save_data()
     return {"message": "Receipt updated"}
 
-
-@app.delete("/receipts/<id:int>")
-def delete_receipt(id):
-    receipt = find_receipt(id)
-    if not receipt:
-        response.status = 404
-        return {"error": "Receipt not found"}
-
-    get_data()["receipts"].remove(receipt)
-    save_data()
-    return {"message": "Receipt deleted"}
-
 if __name__ == "__main__":
     app.run(host=os.getenv("EPAPER_HOST"), port=int(
         os.getenv("EPAPER_PORT")), debug=True)

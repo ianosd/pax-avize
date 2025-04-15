@@ -7,8 +7,7 @@ import xml.etree.ElementTree as ET
 import os
 from collections import namedtuple
 import pandas
-from backend.daq import create_receipt_from_person, find_receipt
-from daq import save_data, get_data, init_data
+import daq
 
 Config = namedtuple("Config", [
                     "company_CIF", "default_client_id", "default_client_name", "gestiune_code"])
@@ -30,7 +29,6 @@ all_products = pandas.read_excel(
 def get_product_by_code(code):
     return all_products.loc[code]
 
-init_data()
 app = Bottle()
 
 def enable_cors(fn):
@@ -61,9 +59,7 @@ def create_receipt():
         response.status = 400
         return {"error": "Invalid data"}
 
-    receipt = create_receipt_from_person(req["person"])
-    get_data()["receipts"].append(receipt)
-    save_data()
+    receipt = daq.create_receipt(person=req["person"])
     response.status = 201
     return {"message": "Receipt created", "receipt": receipt}
 
@@ -98,13 +94,13 @@ def get_filter(query):
 def get_receipts():
     filter_fn = get_filter(request.query)
     response.content_type = "application/json"
-    return json.dumps([r for r in get_data()["receipts"] if filter_fn(r)])
+    return json.dumps([r for r in daq.get_receipts() if filter_fn(r)])
 
 
 @app.get("/receipts/<id:int>", method=["GET"])
 @enable_cors
 def get_receipt(id):
-    receipt = find_receipt(id)
+    receipt = daq.find_receipt(id)
     if not receipt:
         response.status = 404
         return {"error": "Receipt not found"}
@@ -187,7 +183,7 @@ def as_saga_order(receipt):
 @app.get("/receipts/<id:int>/saga", method=["GET"])
 @enable_cors
 def get_saga_xml(id):
-    receipt = find_receipt(id)
+    receipt = daq.find_receipt(id)
     if not receipt:
         response.status = 404
         return {"error": "Receipt not found"}
@@ -205,7 +201,7 @@ def update_receipt():
         response.status = 400
         return {"error": "Invalid data"}
 
-    receipt = find_receipt(req["id"])
+    receipt = daq.find_receipt(req["id"])
     if not receipt:
         response.status = 404
         return {"error": "Receipt not found"}
@@ -215,7 +211,7 @@ def update_receipt():
         return {"error": "Invalid state"}
 
     receipt.update(req)
-    save_data()
+    daq.update_receipt(receipt)
     return {"message": "Receipt updated"}
 
 if __name__ == "__main__":

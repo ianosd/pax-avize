@@ -39,4 +39,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Push the Docker image
-      run: docker push pax-avize:latest
+      run: |
+        docker tag pax-avize:latest ${{ secrets.DOCKER_USERNAME }}/pax-avize:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/pax-avize:latest

@@ -3,4 +3,4 @@ cd frontend
 npm run build
 cd ..
 
-docker buildx build -t ianosd/pax-avize -f docker/Dockerfile .
+docker buildx build -t pax-avize -f docker/Dockerfile .

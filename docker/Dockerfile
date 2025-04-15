@@ -6,13 +6,13 @@ RUN apk update && \
     apk add --no-cache python3 nginx
 
 WORKDIR /app
-COPY requirements.txt requirements.txt
+COPY backend/requirements.txt /app/
 RUN pip install -r requirements.txt
 
 # Copy application files
-COPY dist /data/www
-COPY server.py /app/server.py
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY frontend/dist /data/www
+COPY backend/*.py /app/
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 
 # Set environment variables
 ENV EPAPER_HOST=localhost \

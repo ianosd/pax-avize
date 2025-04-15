@@ -1,11 +1,16 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
+// Set the api url for order data
 if (process.env.IS_ELECTRON) {
     window.electron?.getBaseUrl().then(url => axios.defaults.baseURL = url);
 } else {
-    console.log("env BASE_URL", process.env.VUE_APP_BASE_URL);
-    axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
+    if (process.env.VUE_APP_BASE_URL == "origin_slash_api") {
+        axios.defaults.baseURL = `${window.location.origin}/api`;
+    } else {
+        axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
+    }
+    console.log("backend URL", axios.defaults.baseURL);
 }
 
 export const useOrderStore = defineStore('order',

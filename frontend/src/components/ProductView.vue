@@ -70,6 +70,6 @@ export default {
     </td>
   </tr>
   <tr v-if="dbProduct">
-    <td colspan="5">{{ dbProduct.name }}</td>
+    <td colspan="5"><span>{{ dbProduct.name }}</span> <span><label> <b>Stoc:</b> </label></span> <i>{{ dbProduct.stoc }}</i></td>
   </tr>
 </template>

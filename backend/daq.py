@@ -2,6 +2,8 @@ import datetime
 import os.path
 import json
 
+import dateutil.parser
+
 def load_data(date: datetime.date):
     data_file = os.path.join(os.getenv("EPAPER_DATA"), f"receipts_{date.strftime("%Y-%m-%d")}.json")
     if os.path.exists(data_file):
@@ -27,3 +29,22 @@ def save_data():
 def get_data():
     init_data()
     return _data
+
+
+# Helper function to find a receipt by id and person
+
+
+def find_receipt(id):
+    return next((r for r in get_data()["receipts"] if r["id"] == id), None)
+
+
+def create_receipt_from_person(person, time=None):
+    if time is None:
+        time = datetime.datetime.now()
+    id = max([0, *(receipt["id"] for receipt in get_data()["receipts"])]) + 1
+    number = max([0, *(receipt["number"] for receipt in get_data()["receipts"]
+                       if dateutil.parser.isoparse(receipt["date_created"]).date() == time.date())]) + 1
+    return {
+        "id": id, "number": number, "person": person,
+        "products": [], "state": "in_progress", "date_created": time.isoformat()
+    }

@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 import os
 from collections import namedtuple
 import pandas
+from backend.daq import create_receipt_from_person, find_receipt
 from daq import save_data, get_data, init_data
 
 Config = namedtuple("Config", [
@@ -51,25 +52,6 @@ def enable_cors(fn):
     return _enable_cors
 
 VALID_STATES = {"canceled", "in_progress", "submitted", "cashed"}
-
-# Helper function to find a receipt by id and person
-
-
-def find_receipt(id):
-    return next((r for r in get_data()["receipts"] if r["id"] == id), None)
-
-
-def create_receipt_from_person(person, time=None):
-    if time is None:
-        time = datetime.datetime.now()
-    id = max([0, *(receipt["id"] for receipt in get_data()["receipts"])]) + 1
-    number = max([0, *(receipt["number"] for receipt in get_data()["receipts"]
-                       if dateutil.parser.isoparse(receipt["date_created"]).date() == time.date())]) + 1
-    return {
-        "id": id, "number": number, "person": person,
-        "products": [], "state": "in_progress", "date_created": time.isoformat()
-    }
-
 
 @app.route("/receipts", method=['OPTIONS', 'POST'])
 @enable_cors
@@ -240,4 +222,3 @@ if __name__ == "__main__":
     app.run(host=os.getenv("EPAPER_HOST"), port=int(
         os.getenv("EPAPER_PORT")), debug=True)
     print("\nShutting down... Saving data.")
-    save_data()

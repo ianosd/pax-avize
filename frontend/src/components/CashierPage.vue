@@ -31,15 +31,29 @@
       </div>
 
       <div class="folder-contents">
-        <div
-          v-for="productEntry in order.products"
-          :key="productEntry.productCode"
-          class="folder-item"
-        >
-          {{ productEntry.productCode }} | {{ productEntry.quantity }} x
-          {{ productEntry.price }}
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Produs</th>
+              <th>Cant.</th>
+              <th>Preț</th>
+              <th>Val.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ReadOnlyProductView
+              v-for="(product, index) in order.products"
+              :key="index"
+              :productCode="product.productCode"
+              :quantity="product.quantity"
+              :price="product.price"
+              />
+          </tbody>
+        </table>
       </div>
+      <span v-if="order.state == 'submitted'" style="text-align: right; margin-top: 10px;">
+        <b>Total: {{ getOrderTotal(order) }} </b>
+      </span>
       <button
         :disabled="order.state != 'submitted'"
         class="cashed-button"
@@ -48,7 +62,7 @@
           updateOrder(orders[index]);
         "
       >
-        Încasat
+        Marchează ca încasat
       </button>
     </div>
   </div>
@@ -56,8 +70,12 @@
 <script>
 import { useOrderStore } from "./orders";
 import { mapState, mapActions } from "pinia";
+import ReadOnlyProductView from "./ReadOnlyProductView.vue";
 
 export default {
+  components: {
+    ReadOnlyProductView
+  },
   computed: {
     ...mapState(useOrderStore, ["orders"]),
     baseURL() {
@@ -103,11 +121,11 @@ export default {
         case "in_progress":
           return "în curs de editare";
         case "canceled":
-          return "anulată";
+          return "anulat";
         case "cashed":
-          return "încasată";
+          return "încasat";
         case "submitted":
-          return "trimisă la caserie";
+          return "trimis la caserie";
       }
       return "";
     },

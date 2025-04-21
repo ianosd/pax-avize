@@ -1,4 +1,5 @@
 module.exports = {
+  // it seems like the command npm run build:electron does not use this TODO
   pluginOptions: {
     electronBuilder: {
       preload: 'src/preload.js',

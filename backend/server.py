@@ -16,12 +16,14 @@ with open(os.path.join(os.getenv("EPAPER_DATA"), "config.json"),  "r") as f:
     config = Config(**json.load(f))
 
 dtype_dict = {
-    'code': 'string',
+    'cod': 'string',
     'name': 'string',
     'price_no_vat': 'float64',
     'vat_percent': 'float64',
-    'unit': 'string'
+    'stoc': 'float64',
+    'um': 'string'
 }
+
 
 all_products = pandas.read_excel(
     os.path.join(os.getenv("EPAPER_DATA"), "produse.xls"), dtype=dtype_dict, index_col="cod")

@@ -57,12 +57,13 @@ def create_receipt(person):
     """, (receipt["date_created"], receipt_id))
 
     conn.commit()
-    conn.close()
 
     # Add the id and number to the receipt object
     receipt["id"] = receipt_id
-    receipt["number"] = cursor.lastrowid  # Updated number
+    cursor.execute("SELECT number FROM receipts WHERE id = ?", (receipt_id,))
+    receipt["number"] = cursor.fetchone()[0]  # Fetch the updated number
     receipt["products"] = json.loads(receipt["products"])  # Convert back to list
+    conn.close()
 
     return receipt
 

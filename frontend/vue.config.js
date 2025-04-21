@@ -4,10 +4,18 @@ module.exports = {
       preload: 'src/preload.js',
       // Or, for multiple preload files:
       preload: { preload: 'src/preload.js' },
-        apId: 'ianosd.electric-paper',
-        win: {
-          target: ["portable"]
-        }
+      appId: 'ianosd.electric-paper',
+      productName: 'Pax Avize', // Name of the app
+      directories: {
+        output: 'dist_electron' // Output directory for the build
+      },
+      win: {
+        target: ["portable"] // Generate a portable executable
+      },
+      files: [
+        '**/*', // Include all files in the build
+        '!node_modules/**/*' // Exclude unnecessary files
+      ]
     }
   }
 }

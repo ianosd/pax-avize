@@ -1,33 +1,31 @@
 # pax-avize
 
-This app allows store operators to create a product list (an order, ro: "aviz") for clients shopping in their store, and sending it to the
-cashier once it is ready. The cashier can then easily drag-and-drop the order into the financial software [SAGA C](https://www.sagasoft.ro/saga-c.php),
-which is the software managing the cash register. (you are welcome to integrate this with your own financial software)
-Check out the animation below of how it works. There are three windows in the animation: on the left is the operator view, that would typically be displayed on a mobile phone. In the middle is the cashier view, from where orders may be dragged into the window on the right, which is the  SAGA C software.
+Această aplicație permite gestionarilor din magazine să creeze o listă de produse (un *aviz*) pentru clienții care fac cumpărături în magazinul lor, și să o trimită casierului
+odată ce este gata de încasat. Casierul poate apoi să introducă cu ușuriță avizul, sub forma unei intrări, în software-ul financiar [SAGA C](https://www.sagasoft.ro/saga-c.php) printr-un drag-and-drop cu mouse-ul,
+(sunteți invitați să integrați acest sistem în propriul software financiar, sau să mă contactați dacă sunteți interesați de o astfel de integrare)
+Consultați animația de mai jos pentru a vedea software-ul în acțiune. Există trei ferestre în animație: în stânga este ecranul gestionarului, care ar fi afișată de obicei pe un telefon mobil. În mijloc este aplicația folosită de către casier, de unde comenzile pot fi trase în fereastra din dreapta, care este software-ul SAGA C.
 ![animation](doc/sample_workflow.gif)
 
-The motivation for developing this app was to efficientize the cash-in process in a hardware-store, where
-these orders used to be written on paper, and given to the cashier to input into SAGA C by hand. This was error-prone
-and led to unnecessary waiting times. I would point out that the SAGA company does offer a cash-in software called [Market Line](https://www.sagasoft.ro/MarketLine.php), but it seems taylored to traditional shops, where all products can be easily brought to the cashier. The pax-avize software is taylored for shops where orders are managed by an operator, and are cashed in at the cashier, most likely by someone else.
+Motivația pentru dezvoltarea acestei aplicații a fost eficientizarea procesului de încasare într-un magazin de materiale de construcții și bricolaj, unde
+aceste comenzi erau scrise pe hârtie și date casierului pentru a fi introduse manual în SAGA C. Această procedură era generatoare de erori
+și ducea la timpi de așteptare inutili. Aș dori să subliniez faptul că societatea SAGA oferă un software de încasare numit [Market Line] (https://www.sagasoft.ro/MarketLine.php), dar acesta pare adaptat magazinelor tradiționale, unde toate produsele pot fi aduse cu ușurință la casierie. Software-ul pax-avize este destinat magazinelor în care clientul este servit de către un gestionar, cu marfă pe care poate o încarcă direct în mașină, și sunt încasate în prealabil la casierie, cel mai probabil de către un casier dedicat, dar poate și de către același gestionar.
 
-## Components
+## Componente
 
-The app has three components: a frontend for the operator, wher he inputs orders, a frontend for the cashier, which is actually
-an `electron` app built from the same code as the operator frontend the two residing in the directory `frontend`.
+Aplicația are trei componente: o pagină web pentru operator (gândită pentru folosirea pe smartphone), unde acesta introduce comenzile, o aplicație desktop pentru casier, cele două aflându-se în directorul `frontend`.
 
-In the folder `backend` resides a python server (implemented using `bottle`) which manages the incoming orders and also serves
-data about the products.
+În folderul `backend` se află un server python (implementat folosind `bottle`) care gestionează comenzile primite și, de asemenea, servește date despre produse.
 
-## How to run this
-For the web app, you can run a docker container as in the script [run_docker.sh](run_docker.sh). Note that this is using the data in the [app_data](app_data) folder, which contains a config.json file and an xls file with the available products.
+## Cum să executați această aplicație
+Pentru aplicația web, puteți executa un container docker ca în scriptul [run_docker.sh](run_docker.sh). Luați aminte că aceasta utilizează datele din folderul [app_data](app_data), care conține un fișier `config.json` cu configurația programului (date legate de generarea informatiilor pt. SAGA) și un fișier `produse.xls` cu produsele disponibile, care poate fi obținut prin export `xls` din ecranul "Articole" al programului SAGA.
 
-To run the electron app, which allows you to drag-and-drop the incoming orders into the SAGA software, you can get the executable (windows, AppImage, snap) from the releases. Once it's running, you will have to point it to the backend, by entering the corresponding url address in the settings menu. You will have to then restart the app. If you are using the docker container, the url is `http://ip-of-pc-running-the-container/api`. 
+Pentru a rula aplicația electronică, care vă permite să trageți avizele primite în software-ul SAGA, puteți obține executabilul (*windows*, AppImage, snap) de la pagina de [release-uri](https://github.com/ianosd/pax-avize/releases). Odată ce se execută, va trebui să setați url-ul backend-ului, introducând adresa url corespunzătoare în meniul de setări. Va trebui apoi să reporniți aplicația. Dacă utilizați containerul docker, adresa URL este `http://<ip-ul calculatorului unde rulează containerul>/api`. 
 ![settings](doc/settings.png)
 
-## How to develop this
-Check out the [README](frontend/README.md) in the frontend folder for instructions on how to run the web app, as well as the electron app, in dev mode.
+## Cum să dezvoltați această aplicație
+Consultați [README](frontend/README.md) din folderul frontend pentru instrucțiuni despre cum să executați aplicația web, precum și aplicația electronică, în modul dev.
 
-To run the backend, make sure the [requirements.txt](backend/requirements.txt) are installed and run, for instance
+Pentru a rula backend-ul, asigurați-vă că [requirements.txt](backend/requirements.txt) sunt instalate și rulați, de exemplu
 
 ```
 cd backend

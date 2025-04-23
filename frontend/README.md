@@ -16,7 +16,13 @@ as a native file drag-and-drop, as in when one drags a file from a file explorer
 npm install
 ```
 
-### Compiles and hot-reloads for development (browser version)
+### Compile and hot-reload for development (browser version)
+Since this app is using a backend, you should point the frontend to the backend url by creating a file `.env.development`, for instance with the following content:
+```
+VUE_APP_BASE_URL=http://localhost:8082
+```
+
+Then run 
 ```
 npm run serve
 ```

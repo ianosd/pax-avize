@@ -31,6 +31,11 @@ npm run build
 npm run lint
 ```
 
+### Run electron app for development
+```
+npm run electron:serve
+```
+
 ### Build electron windows executable
 ```
 npm run electron:build -- --win

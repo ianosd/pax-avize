@@ -198,12 +198,12 @@ input[type="number"] {
 }
 
 
-.folder-card.submitted {
-  cursor: grab;
+.folder-card.submitted:not(:hover) {
   animation: wiggle 2s ease-in-out infinite;
 }
 
-.folder-card:hover {
+.folder-card.submitted:hover {
+  cursor: grab;
   transform: scale(1.05);
 }
 

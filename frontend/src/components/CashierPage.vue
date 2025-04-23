@@ -1,5 +1,6 @@
 <template>
   <h1>Avize</h1>
+  <hr />
   <!-- <div class="frame">
     <div v-for="(order, index) in orders" :key="index" class="order-link" :class="stateClass(order.state)">
       <RouterLink 

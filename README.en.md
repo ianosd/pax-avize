@@ -1,3 +1,5 @@
+[![ro](https://img.shields.io/badge/lang-ro-yellow.svg)](README.md)
+
 # pax-avize
 
 This app allows store operators to create a product list (an order, ro: "aviz") for clients shopping in their store, and sending it to the

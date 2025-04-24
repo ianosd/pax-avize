@@ -13,7 +13,7 @@ Consultați animația de mai jos pentru a vedea software-ul în acțiune. Exist�
 
 Motivația pentru dezvoltarea acestei aplicații a fost eficientizarea procesului de încasare într-un magazin de materiale de construcții și bricolaj, unde
 aceste comenzi erau scrise pe hârtie și date casierului pentru a fi introduse manual în SAGA C. Această procedură era generatoare de erori
-și ducea la timpi de așteptare inutili. Aș dori să subliniez faptul că societatea SAGA oferă un software de încasare numit [Market Line] (https://www.sagasoft.ro/MarketLine.php), dar acesta pare adaptat magazinelor tradiționale, unde toate produsele pot fi aduse cu ușurință la casierie. Software-ul pax-avize este destinat magazinelor în care clientul este servit de către un gestionar, cu marfă care este încărcată poate direct în mașină, și este încasată în prealabil la casierie, cel mai probabil de către un casier dedicat, dar poate și de către același gestionar.
+și ducea la timpi de așteptare inutili. Aș dori să subliniez faptul că societatea SAGA oferă un software de încasare numit [Market Line](https://www.sagasoft.ro/MarketLine.php), dar acesta pare adaptat magazinelor tradiționale, unde toate produsele pot fi aduse cu ușurință la casierie. Software-ul pax-avize este destinat magazinelor în care clientul este servit de către un gestionar, cu marfă care este încărcată poate direct în mașină, și este încasată în prealabil la casierie, cel mai probabil de către un casier dedicat, dar poate și de către același gestionar.
 
 ## Componente
 

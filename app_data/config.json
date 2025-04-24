@@ -1,1 +1,6 @@
-config_test.json
+{
+    "company_CIF": "4986511",
+    "default_client_id": "00001",
+    "default_client_name": "IONEL",
+    "gestiune_code": "0001"
+}

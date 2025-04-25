@@ -24,6 +24,8 @@ Aplicația are următoarele două interfețe pentru utilizatori: o pagină web p
 ## Cum să executați această aplicație
 Pentru aplicația web, puteți executa un container docker ca în scriptul [run_docker.sh](run_docker.sh). Luați aminte că aceasta utilizează datele din folderul [app_data](app_data), care conține un fișier `config.json` cu configurația programului (date legate de generarea informatiilor pt. SAGA) și un fișier `produse.xls` cu produsele disponibile, care poate fi obținut prin export `xls` din ecranul "Articole" al programului SAGA.
 
+Pagina web pentru gestionar va fi accesibila la adresa ip a calculatorului unde ruleaza container-ul, la link-ul `http://<adresa ip>/operator`. Pagina radacina, `http://<adresa ip>` afiseaza ecranul casierului, dar nu permite tragerea de avize în SAGA, datorita limitărilor browserelor.
+
 Pentru a rula aplicația electronică, care vă permite să trageți avizele primite în software-ul SAGA, puteți obține executabilul (windows, AppImage, snap) de la pagina de [release-uri](https://github.com/ianosd/pax-avize/releases). Odată ce se execută, va trebui să setați url-ul backend-ului, introducând adresa url corespunzătoare în meniul de setări. Va trebui apoi să reporniți aplicația. Dacă utilizați containerul docker, adresa URL este `http://<ip-ul calculatorului unde rulează containerul>/api`. 
 
 ![settings](doc/settings.png)

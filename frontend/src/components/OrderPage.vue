@@ -4,78 +4,86 @@
     <div class="centered" v-if="orderLoaded">
       <h1>{{ $t("label.aviz") }} #{{ order.number }}</h1>
       <i style="margin-bottom: 10px">{{ orderStateText }}</i>
-      <table>
-        <tr>
-          <th></th>
-          <th>Cod</th>
-          <th>Cant.</th>
-          <th>Preț</th>
-          <th>P. Saga</th>
-        </tr>
-        <ProductView
-          v-for="(item, index) in order.products"
-          :key="index"
-          v-model:price="order.products[index].price"
-          v-model:productCode="order.products[index].productCode"
-          v-model:quantity="order.products[index].quantity"
-          v-bind:editable="isEditableorder"
-          @deleteItem="deleteProduct(index)"
-          ref="productViews"
-        />
-      </table>
-      <button
-        style="margin-top: 10px"
-        class="new-button"
-        @click="newProduct"
-        v-bind:disabled="!isEditableorder"
-      >
-        <FontAwesomeIcon :icon="faPlus" />
-        {{ $t("label.new_product") }}
-      </button>
-      <span style="margin-top: 10px"
-        >Total: <b>{{ total }}</b></span
-      >
-      <div
-        style="
-          width: 100%;
-          margin-top: 20px;
-          display: flex;
-          justify-content: space-around;
-        "
-      >
-        <button
-          v-if="isModifyable"
-          class="delete-button"
-          @click="
-            order.state = 'canceled';
-            updateOrder(order);
-          "
-          v-bind:disabled="!isEditableorder"
-        >
-          <FontAwesomeIcon :icon="faXmark" /> Anulează Aviz
-        </button>
-        <button
-          v-if="isModifyable"
-          class="submit-button"
-          @click="
+      <form
+        style="all: unset; display: contents"
+        @submit.prevent="
             order.state = 'submitted';
             updateOrder(order);
           "
-          v-bind:disabled="!(isEditableorder && isValidorder)"
-        >
-          <FontAwesomeIcon :icon="faCashRegister" /> Trimite la caserie
-        </button>
-        <button
-          v-if="!isModifyable"
-          class="edit-button"
-          @click="
-            order.state = 'in_progress';
-            updateOrder(order);
+      >
+        <div
+          style="
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
           "
         >
-          <FontAwesomeIcon :icon="faEdit" />Modifică
+          <button
+            v-if="isModifyable"
+            class="delete-button"
+            type="button"
+            @click="
+              order.state = 'canceled';
+              updateOrder(order);
+            "
+            v-bind:disabled="!isEditableorder"
+          >
+            <FontAwesomeIcon :icon="faXmark" /> Anulează Aviz
+          </button>
+          <button
+            v-if="isModifyable"
+            class="submit-button"
+            v-bind:disabled="!(isEditableorder && isValidorder)"
+            type="submit"
+          >
+            <FontAwesomeIcon :icon="faCashRegister" /> Trimite la caserie
+          </button>
+          <button
+            v-if="!isModifyable"
+            class="edit-button"
+            @click="
+              order.state = 'in_progress';
+              updateOrder(order);
+            "
+          >
+            <FontAwesomeIcon :icon="faEdit" />Modifică
+          </button>
+        </div>
+        <table>
+          <tr>
+            <th></th>
+            <th>Cod</th>
+            <th>Cant.</th>
+            <th>Preț</th>
+            <th>P. Saga</th>
+          </tr>
+          <ProductView
+            v-for="(item, index) in order.products"
+            :key="index"
+            v-model:price="order.products[index].price"
+            v-model:productCode="order.products[index].productCode"
+            v-model:quantity="order.products[index].quantity"
+            v-bind:editable="isEditableorder"
+            @deleteItem="deleteProduct(index)"
+            ref="productViews"
+          />
+        </table>
+        
+        <button
+          style="margin-top: 10px"
+          type="button"
+          class="new-button"
+          @click="newProduct"
+          v-bind:disabled="!isEditableorder"
+        >
+          <FontAwesomeIcon :icon="faPlus" />
+          {{ $t("label.new_product") }}
         </button>
-      </div>
+        <span style="margin-top: 10px"
+          >Total: <b>{{ total }}</b></span
+        >
+      </form>
     </div>
   </div>
 </template>
@@ -166,7 +174,7 @@ export default {
     },
     id: {
       handler(to) {
-        this.loadOrder(this.orders, this.id);
+        this.loadOrder(this.orders, to);
       },
     },
     order: {
@@ -199,15 +207,15 @@ export default {
     deleteProduct(index) {
       this.order.products.splice(index, 1);
       this.updateOrder(this.order);
-    }
+    },
   },
   mounted() {
-    if (!this.order){
+    if (!this.order) {
       return;
     }
     if (isBlankOrder(this.order)) {
       this.$refs.productViews[0].focusProductCode();
     }
-  }
+  },
 };
 </script>

@@ -77,6 +77,7 @@
             v-bind:editable="isEditableorder"
             @deleteItem="deleteProduct(index)"
             ref="productViews"
+            @next="newProduct"
           />
         </table>
         <span style="margin-top: 10px"

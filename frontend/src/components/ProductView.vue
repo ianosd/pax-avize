@@ -16,7 +16,8 @@ export default {
     "update:quantity",
     "deleteItem",
     "updateDescription",
-    "next"
+    "next",
+    "productDetailsAvailable",
   ],
   watch: {
     productCode: {
@@ -38,6 +39,12 @@ export default {
         this.getUniqueProductByCode,
         (product) => {
           this.dbProduct = product;
+          if (product) {
+            console.log("Setting...", product);
+            this.$emit("productDetailsAvailable", {
+              productDetails: product
+            });
+          }
         }
       ),
       dbProduct: null,

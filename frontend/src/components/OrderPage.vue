@@ -78,6 +78,8 @@
             @deleteItem="deleteProduct(index)"
             ref="productViews"
             @next="newProduct"
+            @productDetailsAvailable="
+              order.products[index].price = $event.productDetails.pret_v_tva;"
           />
         </table>
         <span style="margin-top: 10px"

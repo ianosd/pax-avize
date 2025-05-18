@@ -9,6 +9,14 @@ export default {
   components: {
     FontAwesomeIcon,
   },
+  computed:
+  {
+    priceClass() {
+          return Math.abs(this.price - (this.dbProduct?.pret_v_tva)) > 0.00001 ?? false
+            ? 'low-price price' 
+            : 'price';
+        }
+  },
   props: ["productCode", "quantity", "price", "editable"],
   emits: [
     "update:productCode",
@@ -40,7 +48,6 @@ export default {
         (product) => {
           this.dbProduct = product;
           if (product) {
-            console.log("Setting...", product);
             this.$emit("productDetailsAvailable", {
               productDetails: product
             });
@@ -54,7 +61,6 @@ export default {
   methods: {
     ...mapActions(useOrderStore, ["getUniqueProductByCode"]),
     focusProductCode() {
-      console.log("Focusing product code input");
       this.$refs.productCodeInput.focus();
     },
   },
@@ -67,7 +73,6 @@ export default {
       <button
         type="button"
         @click="
-          console.log('deleting');
           $emit('deleteItem', null);
         "
         class="delete-button small-button"
@@ -102,18 +107,17 @@ export default {
     <td>
       <input
         v-if="editable"
-        class="price"
         type="number"
         v-bind:value="price"
         placeholder="Preț"
+        :class="priceClass"
         @input="(event) => $emit('update:price', event.target.value)"
         @keypress="
           (event) => {
-            console.log('keypress', event);
-            if (event.key === ' ' || event.key === 'Pause') {
-              event.preventDefault();
-              $emit('next');
-            }
+        if (event.key === ' ') {
+          event.preventDefault();
+          $emit('next');
+        }
           }
         "
       />

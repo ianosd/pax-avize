@@ -39,6 +39,10 @@ export default {
   },
   methods: {
     ...mapActions(useOrderStore, ["getUniqueProductByCode"]),
+    focusProductCode() {
+      console.log("Focusing product code input");
+      this.$refs.productCodeInput.focus();
+    }
   }
 };
 </script>
@@ -51,7 +55,7 @@ export default {
       </button>
     </td>
     <td>
-      <input v-if="editable" class="productcode" type="number" v-bind:value="productCode" placeholder="Cod"
+      <input ref="productCodeInput" v-if="editable" class="productcode" type="number" v-bind:value="productCode" placeholder="Cod"
         @input="(event) => $emit('update:productCode', event.target.value)" />
       <span v-else>{{ productCode }}</span>
     </td>

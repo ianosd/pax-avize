@@ -27,6 +27,7 @@ export const useOrderStore = defineStore('order',
                 var result = await axios.post('/receipts', { person: personArg });
                 var receipt = result.data.receipt;
                 this.orders.push(receipt);
+                console.log(this.orders);
                 return receipt;
             },
             async updateOrder(receipt) {

@@ -50,7 +50,7 @@ export default {
 <template>
   <tr :class="dbProduct ? 'noborder' : ''">
     <td>
-      <button @click="$emit('deleteItem', null)" class="delete-button small-button" v-bind:disabled="!editable">
+      <button type="button" @click="console.log('deleting'); $emit('deleteItem', null)" class="delete-button small-button" v-bind:disabled="!editable">
         <FontAwesomeIcon :icon="faTrash" />
       </button>
     </td>

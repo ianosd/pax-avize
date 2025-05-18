@@ -133,12 +133,12 @@ export default {
     </td>
   </tr>
   <tr v-if="dbProduct">
-    <td colspan="5">
+    <td colspan="5" >
+      <div style="display: flex; justify-content: center; gap: 10px">
       <span>{{ dbProduct.name }}</span>
       <span
-        ><label> <b>Stoc:</b> </label></span
-      >
-      <i>{{ dbProduct.stoc }}</i>
+        > <b>Stoc:</b> <i>{{ dbProduct.stoc }}</i></span>
+      </div>
     </td>
   </tr>
 </template>

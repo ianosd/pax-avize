@@ -49,16 +49,6 @@
             <FontAwesomeIcon :icon="faEdit" />Modifică
           </button>
         </div>
-        <button
-          style="margin-top: 10px"
-          type="button"
-          class="new-button"
-          @click="newProduct"
-          v-bind:disabled="!isEditableorder"
-        >
-          <FontAwesomeIcon :icon="faPlus" />
-          {{ $t("label.new_product") }}
-        </button>
         <table>
           <tr>
             <th></th>
@@ -82,6 +72,16 @@
               order.products[index].price = $event.productDetails.pret_v_tva;"
           />
         </table>
+        <button
+          style="margin-top: 10px"
+          type="button"
+          class="new-button"
+          @click="newProduct"
+          v-bind:disabled="!isEditableorder"
+        >
+          <FontAwesomeIcon :icon="faPlus" />
+          {{ $t("label.new_product") }}
+        </button>
         <span style="margin-top: 10px"
           >Total: <b>{{ total }}</b></span
         >

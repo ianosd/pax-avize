@@ -7,8 +7,7 @@
       <form
         style="all: unset; display: contents"
         @submit.prevent="
-            order.state = 'submitted';
-            updateOrder(order);
+            submitOrder();
           "
       >
         <div
@@ -78,6 +77,7 @@
             @deleteItem="deleteProduct(index)"
             ref="productViews"
             @next="newProduct"
+            @submit="submitOrder"
             @productDetailsAvailable="
               order.products[index].price = $event.productDetails.pret_v_tva;"
           />
@@ -192,6 +192,13 @@ export default {
   },
   methods: {
     ...mapActions(useOrderStore, ["loadReceipts"]),
+    submitOrder() {
+      if (!(this.isEditableorder && this.isValidorder)) {
+        return;
+      }
+      this.order.state = "submitted";
+      this.updateOrder(this.order);
+    },
     loadOrder(orders, id) {
       const index = orders.findIndex((order) => order.id == id);
       this.order = orders[index];

@@ -26,6 +26,7 @@ export default {
     "updateDescription",
     "next",
     "productDetailsAvailable",
+    "submit"
   ],
   watch: {
     productCode: {
@@ -114,9 +115,13 @@ export default {
         @input="(event) => $emit('update:price', event.target.value)"
         @keypress="
           (event) => {
-        if (event.key === ' ') {
+        if (event.key === 'Enter') {
           event.preventDefault();
           $emit('next');
+        }
+        if (event.key === ' ') {
+          event.preventDefault();
+          $emit('submit');
         }
           }
         "

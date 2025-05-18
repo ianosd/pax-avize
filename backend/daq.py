@@ -30,7 +30,7 @@ def create_receipt(person):
 
     receipt = {
         "person": person,
-        "products": json.dumps([]),  # Store products as a JSON string
+        "products": json.dumps([{"productCode": "", "quantity": "", "price": ""}]),  # Store products as a JSON string
         "state": "in_progress",
         "date_created": time.isoformat()
     }

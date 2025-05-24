@@ -6,7 +6,6 @@ import dateutil.parser
 import xml.etree.ElementTree as ET
 import os
 from collections import namedtuple
-import pandas
 import daq
 
 Config = namedtuple("Config", [
@@ -23,13 +22,6 @@ dtype_dict = {
     'stoc': 'float64',
     'um': 'string'
 }
-
-
-all_products = pandas.read_excel(
-    os.path.join(os.getenv("EPAPER_DATA"), "produse.xls"), dtype=dtype_dict, index_col="cod")
-
-def get_product_by_code(code):
-    return all_products.loc[code]
 
 app = Bottle()
 
@@ -112,8 +104,8 @@ def get_receipt(id):
 @enable_cors
 def get_product(code):
     try:
-        db_product = get_product_by_code(code)
-    except KeyError:
+        db_product = daq.get_product_by_code(code)
+    except ValueError:
         return json.dumps([])
     return json.dumps([{"cod": code, "pret_v_tva": db_product.pret_v_tva, "name": db_product.denumire, "stoc": db_product.stoc}])
 
@@ -149,9 +141,9 @@ def as_saga_order(receipt):
                     # <TVA>3.80</TVA>
 
         try:
-            db_product = get_product_by_code(product["productCode"])
+            db_product = daq.get_product_by_code(product["productCode"])
             unit, tva, name = db_product.um, db_product.tva, db_product.denumire
-        except KeyError:
+        except ValueError:
             print("ERROR! product not found in DB")
             unit = "BUC"
             tva = 19

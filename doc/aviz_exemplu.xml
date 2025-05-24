@@ -1,0 +1,30 @@
+<Facturi>
+  <Factura>
+    <Antet>
+      <Cod>00378</Cod>
+      <ClientNume>PERSOANA FIZICA</ClientNume>
+      <FacturaTip>B</FacturaTip>
+      <FurnizorCIF>4986511</FurnizorCIF>
+      <FacturaData>19.04.2025</FacturaData>
+      <FacturaScadenta>19.04.2025</FacturaScadenta>
+      <FacturaNumar />
+    </Antet>
+    <Detalii>
+      <Continut>
+        <Linie>
+          <LinieNrCrt>1</LinieNrCrt>
+          <Gestiune>0002</Gestiune>
+          <CodArticolClient>1</CodArticolClient>
+          <CodBare />
+          <InformatiiSuplimentare />
+          <UM>BUC</UM>
+          <Cantitate>1</Cantitate>
+          <Pret>1</Pret>
+          <Valoare>0.84</Valoare>
+          <ProcTVA>19</ProcTVA>
+          <TVA>0.16</TVA>
+        </Linie>
+      </Continut>
+    </Detalii>
+  </Factura>
+</Facturi>

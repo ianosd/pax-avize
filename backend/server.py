@@ -6,6 +6,7 @@ import dateutil.parser
 import xml.etree.ElementTree as ET
 import os
 from collections import namedtuple
+import saga_daq
 import daq
 
 Config = namedtuple("Config", [
@@ -104,7 +105,7 @@ def get_receipt(id):
 @enable_cors
 def get_product(code):
     try:
-        db_product = daq.get_product_by_code(code)
+        db_product = saga_daq.get_product_by_code(code)
     except ValueError:
         return json.dumps([])
     return json.dumps([{"cod": code, "pret_v_tva": db_product.pret_v_tva, "name": db_product.denumire, "stoc": db_product.stoc}])
@@ -141,7 +142,7 @@ def as_saga_order(receipt):
                     # <TVA>3.80</TVA>
 
         try:
-            db_product = daq.get_product_by_code(product["productCode"])
+            db_product = saga_daq.get_product_by_code(product["productCode"])
             unit, tva, name = db_product.um, db_product.tva, db_product.denumire
         except ValueError:
             print("ERROR! product not found in DB")

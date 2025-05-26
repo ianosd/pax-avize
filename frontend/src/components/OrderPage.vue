@@ -38,6 +38,7 @@
           >
             <FontAwesomeIcon :icon="faCashRegister" /> Trimite la caserie
           </button>
+          <OrderView/>
           <button
             v-if="!isModifyable"
             class="edit-button"
@@ -49,29 +50,6 @@
             <FontAwesomeIcon :icon="faEdit" />Modifică
           </button>
         </div>
-        <table>
-          <tr>
-            <th></th>
-            <th>Cod</th>
-            <th>Cant.</th>
-            <th>Preț</th>
-            <th>P. Saga</th>
-          </tr>
-          <ProductView
-            v-for="(item, index) in order.products"
-            :key="index"
-            v-model:price="order.products[index].price"
-            v-model:productCode="order.products[index].productCode"
-            v-model:quantity="order.products[index].quantity"
-            v-bind:editable="isEditableorder"
-            @deleteItem="deleteProduct(index)"
-            ref="productViews"
-            @next="newProduct"
-            @submit="submitOrder"
-            @productDetailsAvailable="
-              order.products[index].price = $event.productDetails.pret_v_tva;"
-          />
-        </table>
         <button
           style="margin-top: 10px"
           type="button"
@@ -94,6 +72,7 @@
 import { mapState, mapActions } from "pinia";
 import { useOrderStore, isBlankOrder } from "./orders";
 import ProductView from "./ProductView.vue";
+import {OrderView} from "./OrderView.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faPlus,
@@ -109,6 +88,7 @@ export default {
     ProductView,
     FontAwesomeIcon,
     OperatorNav,
+    OrderView
   },
   computed: {
     isModifyable() {

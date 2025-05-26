@@ -16,7 +16,8 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 
 # Set environment variables
 ENV EPAPER_HOST=localhost \
-    EPAPER_PORT=8080
+    EPAPER_PORT=8080 \
+    EPAPER_DATA=/app/data
 
 # Expose port
 EXPOSE 80

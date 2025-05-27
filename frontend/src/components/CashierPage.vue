@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-import { isBlankOrder, useOrderStore } from "./orders";
+import { useOrderStore } from "./orders";
 import { mapState, mapActions } from "pinia";
 import ReadOnlyProductView from "./ReadOnlyProductView.vue";
 import OrderPage from "./OrderPage.vue";
@@ -78,14 +78,6 @@ export default {
     displayedOrders() {
       return (
         this.orders
-          // TODO this is a hack.
-          // The real solution is to make the app be used in such a way
-          // that there are not a plethora of blank orders being created.
-          .filter(
-            (order) =>
-              order.state != "in_progress" ||
-              !(order.products.length == 0 || isBlankOrder(order))
-          )
           .sort((a, b) => b.number - a.number)
       );
     },

@@ -175,7 +175,7 @@ export default {
   watch: {
     orders: {
       handler(neworders) {
-        if (this.id !== null){
+        if (!this.isCashierMode){
           this.loadOrder(neworders, this.id);
         }
       },

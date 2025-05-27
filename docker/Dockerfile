@@ -1,9 +1,11 @@
-# Use Alpine base image
-FROM python:3-alpine
+FROM python:3-slim
 
-# Install Python, pip, and nginx
-RUN apk update && \
-    apk add --no-cache python3 nginx
+# Install nginx and Firebird client library
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        nginx \
+        libfbclient2 \
+        && apt-get clean
 
 WORKDIR /app
 COPY backend/requirements.txt /app/

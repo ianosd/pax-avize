@@ -92,7 +92,7 @@
 
 <script>
 import { mapState, mapActions } from "pinia";
-import { useOrderStore } from "./orders";
+import { useOrderStore, isBlankOrder } from "./orders";
 import ProductView from "./ProductView.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
@@ -103,10 +103,6 @@ import {
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import OperatorNav from "./OperatorNav.vue";
-
-function isBlankOrder(order) {
-  return order.products.length == 1 && order.products[0].productCode == "";
-}
 
 export default {
   components: {

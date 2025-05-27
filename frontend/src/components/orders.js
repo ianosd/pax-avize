@@ -47,3 +47,7 @@ export const useOrderStore = defineStore('order',
         }
     }
 )
+
+export function isBlankOrder(order) {
+  return order.products.length == 1 && order.products[0].productCode == "";
+}

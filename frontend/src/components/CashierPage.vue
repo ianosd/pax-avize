@@ -19,7 +19,7 @@
 
   <div class="folder-container">
     <div
-      v-for="(order, index) in orders"
+      v-for="order in displayedOrders"
       :key="order.id"
       class="folder-card"
       :class="stateClass(order.state)"
@@ -48,19 +48,19 @@
               :productCode="product.productCode"
               :quantity="product.quantity"
               :price="product.price"
-              />
+            />
           </tbody>
         </table>
       </div>
-      <span v-if="order.state == 'submitted'" style="text-align: right; margin-top: 10px;">
+      <span style="text-align: right; margin-top: 10px">
         <b>Total: {{ getOrderTotal(order) }} </b>
       </span>
       <button
         :disabled="order.state != 'submitted'"
         class="cashed-button"
         @click="
-          orders[index].state = 'cashed';
-          updateOrder(orders[index]);
+          order.state = 'cashed';
+          updateOrder(order);
         "
       >
         Marchează ca încasat
@@ -69,30 +69,42 @@
   </div>
 </template>
 <script>
-import { useOrderStore } from "./orders";
+import { isBlankOrder, useOrderStore } from "./orders";
 import { mapState, mapActions } from "pinia";
 import ReadOnlyProductView from "./ReadOnlyProductView.vue";
 
 export default {
   components: {
-    ReadOnlyProductView
+    ReadOnlyProductView,
   },
   computed: {
     ...mapState(useOrderStore, ["orders"]),
     baseURL() {
       return this.electronURL ? this.electronURL : process.env.VUE_APP_BASE_URL;
-    }
+    },
+    displayedOrders() {
+      return (
+        this.orders
+          // TODO this is a hack.
+          // The real solution is to make the app be used in such a way
+          // that there are not a plethora of blank orders being created.
+          .filter(
+            (order) =>
+              order.state != "in_progress" ||
+              !(order.products.length == 0 || isBlankOrder(order))
+          )
+          .sort((a, b) => b.number - a.number)
+      );
+    },
   },
   data() {
     return {
-      electronURL: ""
-    }
+      electronURL: "",
+    };
   },
   methods: {
     dragStart(event, order) {
-      console.log("Yuhu!")
-      // TODO fix this
-      const fileURL = `${this.baseURL}/receipts/${order.id}/saga`
+      const fileURL = `${this.baseURL}/receipts/${order.id}/saga`;
       if (window.electron) {
         event.preventDefault();
         window.electron?.startDrag(fileURL);
@@ -101,7 +113,8 @@ export default {
         event.dataTransfer.setData(
           "DownloadURL",
           `text/plain:aviz_${order.number}.txt:${fileURL}`
-        );}
+        );
+      }
     },
     ...mapActions(useOrderStore, ["loadReceipts", "updateOrder"]),
     getOrderTotal(order) {
@@ -134,7 +147,7 @@ export default {
   beforeMount() {
     var self = this;
 
-    window.electron?.getBaseUrl().then(url => this.electronURL=url);
+    window.electron?.getBaseUrl().then((url) => (this.electronURL = url));
     const callback = () => {
       console.log("Self", self);
       self.loadReceipts();

@@ -25,4 +25,28 @@
 </template>
 
 export default {
+    props: {
+        order: {
+            type: Object,
+            required: true,
+        }
+    },
+    methods: {
+        newProduct() {
+            this.order.products.push({
+                productCode: "",
+                quantity: "",
+                price: "",
+            });
+            this.$nextTick(() => {
+                this.$refs.productViews[this.order.products.length - 1].focusProductCode();
+            });
+        },
+        deleteProduct(index) {
+            this.order.products.splice(index, 1);
+        },
+        submitOrder() {
+            this.$emit('submitOrder');
+        }
+    },
 }

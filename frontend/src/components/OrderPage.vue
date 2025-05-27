@@ -38,7 +38,7 @@
           >
             <FontAwesomeIcon :icon="faCashRegister" /> Trimite la caserie
           </button>
-          <OrderView/>
+          <OrderView :order="order"/>
           <button
             v-if="!isModifyable"
             class="edit-button"
@@ -71,8 +71,7 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import { useOrderStore, isBlankOrder } from "./orders";
-import ProductView from "./ProductView.vue";
-import {OrderView} from "./OrderView.vue";
+import OrderView from "./OrderView.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faPlus,
@@ -85,7 +84,6 @@ import OperatorNav from "./OperatorNav.vue";
 
 export default {
   components: {
-    ProductView,
     FontAwesomeIcon,
     OperatorNav,
     OrderView

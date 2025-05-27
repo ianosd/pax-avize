@@ -54,7 +54,7 @@ def create_receipt():
         response.status = 400
         return {"error": "Invalid data"}
 
-    receipt = daq.create_receipt(person=req["person"])
+    receipt = daq.create_receipt(person=req["person"], products=req.get("products", None), state=req.get("state", "in_progress"))
     response.status = 201
     return {"message": "Receipt created", "receipt": receipt}
 

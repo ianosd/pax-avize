@@ -1,20 +1,11 @@
 <template>
+  <div>
+  <h1>Editare aviz <button @click="resetOrder()">Aviz nou</button></h1>
+  <OrderPage ref="orderPage" :id="orderPageId" :isCashierMode="true"/>
+  </div>
+  <hr/>
   <h1>Avize</h1>
   <hr />
-  <!-- <div class="frame">
-    <div v-for="(order, index) in orders" :key="index" class="order-link" :class="stateClass(order.state)">
-      <RouterLink 
-              :to="{ name: 'order', params: {id:order.id} }"
-            >
-        <span style="color:black">#{{ order.number }}</span>
-        <span>
-          {{ stateText(order.state) }}
-        </span>
-        <span>{{ getOrderTotal(order) }} </span>
-      </RouterLink>
-    </div>
-    </div>
-  </div> -->
   <!-- TODO currency! -->
 
   <div class="folder-container">
@@ -27,8 +18,8 @@
       @dragstart="dragStart($event, order)"
     >
       <div class="folder-header">
-        <b>#{{ order.number }}</b>
-        <span>{{ stateText(order.state) }}</span>
+        <span><b>#{{ order.number }}</b> {{ stateText(order.state) }}</span>
+        <button @click="orderPageId=order.id">Editează</button>
       </div>
 
       <div class="folder-contents">
@@ -72,10 +63,12 @@
 import { isBlankOrder, useOrderStore } from "./orders";
 import { mapState, mapActions } from "pinia";
 import ReadOnlyProductView from "./ReadOnlyProductView.vue";
+import OrderPage from "./OrderPage.vue";
 
 export default {
   components: {
     ReadOnlyProductView,
+    OrderPage
   },
   computed: {
     ...mapState(useOrderStore, ["orders"]),
@@ -100,9 +93,14 @@ export default {
   data() {
     return {
       electronURL: "",
+      orderPageId: null
     };
   },
   methods: {
+    resetOrder() {
+      this.orderPageId = null;
+      this.$refs.orderPage.resetOrder();
+    },
     dragStart(event, order) {
       const fileURL = `${this.baseURL}/receipts/${order.id}/saga`;
       if (window.electron) {

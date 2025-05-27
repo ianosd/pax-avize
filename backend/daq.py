@@ -25,14 +25,16 @@ def init_db():
     conn.close()
 
 
-def create_receipt(person):
+def create_receipt(person, products=None, state="in_progress"):
     """Create a new receipt for a person. The id and number are auto-incremented by the database."""
     time = datetime.datetime.now()
 
+    productsJson = json.dumps(products) if products is not None else json.dumps([{"productCode": "", "quantity": "", "price": ""}])
+
     receipt = {
         "person": person,
-        "products": json.dumps([{"productCode": "", "quantity": "", "price": ""}]),  # Store products as a JSON string
-        "state": "in_progress",
+        "products": productsJson, # Store products as a JSON string
+        "state": state,
         "date_created": time.isoformat()
     }
 

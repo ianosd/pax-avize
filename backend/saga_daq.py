@@ -45,7 +45,7 @@ def get_product_by_code(code):
         cod=row[0],
         denumire=row[1],
         um=row[2],
-        tva=row[3],
+        tva=float(row[3]),
         den_tip=row[4],
         stoc=float(row[5]),
         grupa=row[6],

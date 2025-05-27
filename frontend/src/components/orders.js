@@ -30,6 +30,13 @@ export const useOrderStore = defineStore('order',
                 console.log(this.orders);
                 return receipt;
             },
+            async createDetailedOrder(order) {
+                var result = await axios.post('/receipts', order);
+                var receipt = result.data.receipt;
+                this.orders.push(receipt);
+                console.log(this.orders);
+                return receipt;
+            },
             async updateOrder(receipt) {
                 await axios.put("/receipts", receipt);
             },

@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <OperatorNav></OperatorNav>
+    <OperatorNav v-if="!isCashierMode"></OperatorNav>
     <div class="centered" v-if="orderLoaded">
-      <h1>{{ $t("label.aviz") }} #{{ order.number }}</h1>
+      <h1 v-if="id!=null">{{ $t("label.aviz") }} #{{ order.number }}</h1>
+      <h1 v-else>Aviz nou</h1>
       <i style="margin-bottom: 10px">{{ orderStateText }}</i>
       <form
         style="all: unset; display: contents"
@@ -23,10 +24,14 @@
             class="delete-button"
             type="button"
             @click="
-              order.state = 'canceled';
-              updateOrder(order);
+              if (id == null){
+                resetOrder();
+              } else {
+                order.state = 'canceled';
+                updateOrder(order);
+              }
             "
-            v-bind:disabled="!isEditableorder"
+            v-bind:disabled="id == null || !isEditableorder"
           >
             <FontAwesomeIcon :icon="faXmark" /> Anulează Aviz
           </button>
@@ -148,7 +153,12 @@ export default {
   },
   props: {
     id: Number,
+    isCashierMode: {
+      type: Boolean,
+      default: false,
+    },
   },
+  emits: ["orderCreated"],
   data() {
     return {
       productCode: "",
@@ -165,7 +175,9 @@ export default {
   watch: {
     orders: {
       handler(neworders) {
-        this.loadOrder(neworders, this.id);
+        if (this.id !== null){
+          this.loadOrder(neworders, this.id);
+        }
       },
       deep: true, // Ensures Vue watches changes inside the array
       immediate: true, // Runs the handler immediately on component mount
@@ -174,6 +186,7 @@ export default {
       handler(to) {
         this.loadOrder(this.orders, to);
       },
+      immediate: true, // Runs the handler immediately on component mount
     },
     order: {
       handler(newOrderValue) {
@@ -187,8 +200,19 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useOrderStore, ["loadReceipts"]),
+    resetOrder() {
+      this.order = {person: "", state: "in_progress", date_created: new Date().toISOString(), products: [{productCode: "", quantity: "", price: ""}]};
+    },
+    ...mapActions(useOrderStore, ["loadReceipts", "createDetailedOrder"]),
     submitOrder() {
+      if (this.id === null) {
+        this.order.state = "submitted";
+        this.createDetailedOrder(this.order).then((order) => {
+          this.$emit("orderCreated", order.id);
+        });
+        this.resetOrder();
+        return;
+      }
       if (!(this.isEditableorder && this.isValidorder)) {
         return;
       }
@@ -196,6 +220,12 @@ export default {
       this.updateOrder(this.order);
     },
     loadOrder(orders, id) {
+      console.log("this.order:", this.order);
+      if (id === null) {
+        this.resetOrder();
+        this.orderLoaded = true;
+        return;
+      }
       const index = orders.findIndex((order) => order.id == id);
       this.order = orders[index];
       this.orderLoaded = this.order !== undefined;
